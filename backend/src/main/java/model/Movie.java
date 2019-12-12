@@ -5,7 +5,7 @@ import jdk.internal.jline.internal.Nullable;
 import java.util.List;
 
 public interface Movie {
-    String id();
+    String movie_id();
     String title();
     @Nullable String consensus();
     @Nullable String critic_rating();

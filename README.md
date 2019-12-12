@@ -5,6 +5,6 @@
 ##### Overview
 > Based on web-scraped data from IMDB, AMC, and RottenTomatoes for movies and theater information using *scrapy* Python library,  this project is to develop a database system that allows users to reserve seats as well as food menu for a movie at a specific theater. This web application demonstrates database management system for a movie theater. 
 
-###### Stack
+###### Tech Stack
 > MongoDB (non-relational), Spark Framework, (Functional) ReactJS, Maven
 

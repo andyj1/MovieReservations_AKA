@@ -1,7 +1,5 @@
 package store.Showtime;
 
-import jdk.internal.jline.internal.Nullable;
-
 import java.util.List;
 
 public interface ShowtimeStore {

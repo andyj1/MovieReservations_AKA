@@ -2,10 +2,17 @@ package store.User;
 
 import model.User;
 
-import java.util.List;
-
 public interface UserStore {
     Integer addUser(User newUser);
-    List<User> getUser(String name, String id);
+
+    boolean authenticate(String username, String password);
+
+    User getUser(String user_name);
+
     String login(String username, String password);
+
+    void setPassword(String username, String oldPassword, String newPassword);
+
+    User updateUser(String user_id, String name, String username, String password, String email);
+
 }

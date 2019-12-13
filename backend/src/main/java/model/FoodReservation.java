@@ -1,5 +1,8 @@
 package model;
 
+import io.norberg.automatter.AutoMatter;
+
+@AutoMatter
 public interface FoodReservation {
     String food_res_id();
     Integer count();

@@ -1,5 +1,5 @@
-import React, { Component, useState } from 'react';
-import {Accordion, Card, ListGroup, Button, Collapse} from "react-bootstrap";
+import React, { Component } from 'react';
+import {Accordion, Card} from "react-bootstrap";
 
 class Theaters extends Component{
   constructor(props) {

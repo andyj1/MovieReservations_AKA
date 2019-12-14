@@ -1,7 +1,5 @@
 package store.Movie;
 
-import jdk.internal.jline.internal.Nullable;
-
 import java.util.List;
 
 public interface MovieStore {

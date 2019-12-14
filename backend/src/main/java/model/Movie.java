@@ -1,13 +1,15 @@
 package model;
 
-import jdk.internal.jline.internal.Nullable;
+import com.mongodb.lang.Nullable;
+import io.norberg.automatter.AutoMatter;
 
 import java.util.List;
-
+@AutoMatter
 public interface Movie {
     String movie_id();
     String title();
-    @Nullable String consensus();
+    @Nullable
+    String consensus();
     @Nullable String critic_rating();
     @Nullable String critic_count();
     @Nullable String audience_count();

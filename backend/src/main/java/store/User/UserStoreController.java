@@ -21,13 +21,14 @@ public class UserStoreController implements UserStore {
 
     Config config = ConfigFactory.load("AKA.conf");
     MongoClient dbClient = new MongoClient(new MongoClientURI(config.getString("mongo.uri")));
-    MongoDatabase database = dbClient.getDatabase("mongo.database");
-    MongoCollection<Document> userCollection = database.getCollection(config.getString("mongo.collection_user"));
+    MongoDatabase database = dbClient.getDatabase(config.getString("mongo.database"));
+    MongoCollection<Document> userCollection = database.getCollection(config.getString("mongo.collection_users"));
 
     private static tokenizer tokenGenerator;
 
     public UserStoreController() {
         this.config = config;
+        tokenGenerator = new tokenizer();
     }
 
     // TODO: add a user to database given a User object
@@ -39,14 +40,18 @@ public class UserStoreController implements UserStore {
         String email = newUser.email();
         Boolean admin = newUser.admin();
         Date date = new Date();
+        String genre = newUser.favorite_genre();
+        String zip = newUser.zip_code();
 
         Document userDoc = new Document()
                 .append("name", name)
                 .append("username", username)
-                .append("name", password)
+                .append("password", password)
                 .append("email", email)
                 .append("admin", admin)
-                .append("date", date);
+                .append("created_at", date)
+                .append("favorite_genre", genre)
+                .append("zip_code", zip);
         // check for duplicate username
         Document dupUsername = userCollection.find(eq("username", username)).first();
         if(dupUsername != null){
@@ -76,6 +81,9 @@ public class UserStoreController implements UserStore {
         if (user == null) {
             return false;
         }
+        if(!user.password().equals(password)){
+            return false;
+        }
         String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPassword);
         return result.verified;
@@ -85,7 +93,7 @@ public class UserStoreController implements UserStore {
     public User getUser(String user_name) {
         Document doc;
         doc = userCollection.find(eq("username", new String(user_name))).first();
-        String user_id = doc.getString("_id");
+        String user_id = doc.getObjectId("_id").toHexString();
         String name = doc.getString("name");
         String username = doc.getString("username");
         String password = doc.getString("password");
@@ -123,14 +131,11 @@ public class UserStoreController implements UserStore {
 
     // TODO: login with username and password
     public String login(String username, String password){
-        Document userDoc;
         String token = null;
-
         try{
-            userDoc = userCollection.find(eq("username", username)).first();
-            String pwd = userDoc.getString("password");
-            if(password.equals(pwd)){
-                String uname = userDoc.getString("username");
+            if(authenticate(username, password)){
+                System.err.println("**********************************************************************");
+                System.err.println(username);
                 token = tokenGenerator.makeToken(username);
             }
         } catch (Exception e){
@@ -140,7 +145,7 @@ public class UserStoreController implements UserStore {
         if(token != null){
             return token;
         } else{
-            return "invalid";
+            return "invalid login";
         }
     }
 

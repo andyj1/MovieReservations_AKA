@@ -8,7 +8,7 @@ import java.util.List;
 @AutoMatter
 public interface Showtime {
     String showtime_id();
-    String movie_name();
+    String movie_id();
     String date();
     String time();
     String type();

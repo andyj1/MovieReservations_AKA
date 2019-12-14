@@ -39,15 +39,15 @@ public class tokenizer {
     }
 
     public String makeToken(String username) {
-        String token;
+        String token = null;
         try {
             Algorithm algorithm = Algorithm.HMAC512(this.secret);
             token = JWT.create()
-                    .withIssuer("autho0")
+                    .withIssuer("auth0")
                     .withClaim("username", username)
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
-            return null;
+            exception.printStackTrace();
         }
         return token;
     }

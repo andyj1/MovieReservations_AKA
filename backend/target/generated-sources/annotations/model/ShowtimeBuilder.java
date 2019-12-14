@@ -13,7 +13,7 @@ import javax.annotation.Generated;
 public final class ShowtimeBuilder {
   private String showtime_id;
 
-  private String movie_name;
+  private String movie_id;
 
   private String date;
 
@@ -30,7 +30,7 @@ public final class ShowtimeBuilder {
 
   private ShowtimeBuilder(Showtime v) {
     this.showtime_id = v.showtime_id();
-    this.movie_name = v.movie_name();
+    this.movie_id = v.movie_id();
     this.date = v.date();
     this.time = v.time();
     this.type = v.type();
@@ -41,7 +41,7 @@ public final class ShowtimeBuilder {
 
   private ShowtimeBuilder(ShowtimeBuilder v) {
     this.showtime_id = v.showtime_id;
-    this.movie_name = v.movie_name;
+    this.movie_id = v.movie_id;
     this.date = v.date;
     this.time = v.time;
     this.type = v.type;
@@ -61,15 +61,15 @@ public final class ShowtimeBuilder {
     return this;
   }
 
-  public String movie_name() {
-    return movie_name;
+  public String movie_id() {
+    return movie_id;
   }
 
-  public ShowtimeBuilder movie_name(String movie_name) {
-    if (movie_name == null) {
-      throw new NullPointerException("movie_name");
+  public ShowtimeBuilder movie_id(String movie_id) {
+    if (movie_id == null) {
+      throw new NullPointerException("movie_id");
     }
-    this.movie_name = movie_name;
+    this.movie_id = movie_id;
     return this;
   }
 
@@ -182,7 +182,7 @@ public final class ShowtimeBuilder {
 
   public Showtime build() {
     List<Integer> _seats = (seats != null) ? Collections.unmodifiableList(new ArrayList<Integer>(seats)) : null;
-    return new Value(showtime_id, movie_name, date, time, type, theater_id, _seats);
+    return new Value(showtime_id, movie_id, date, time, type, theater_id, _seats);
   }
 
   public static ShowtimeBuilder from(Showtime v) {
@@ -196,7 +196,7 @@ public final class ShowtimeBuilder {
   private static final class Value implements Showtime {
     private final String showtime_id;
 
-    private final String movie_name;
+    private final String movie_id;
 
     private final String date;
 
@@ -209,15 +209,15 @@ public final class ShowtimeBuilder {
     private final List<Integer> seats;
 
     private Value(@AutoMatter.Field("showtime_id") String showtime_id,
-        @AutoMatter.Field("movie_name") String movie_name, @AutoMatter.Field("date") String date,
+        @AutoMatter.Field("movie_id") String movie_id, @AutoMatter.Field("date") String date,
         @AutoMatter.Field("time") String time, @AutoMatter.Field("type") String type,
         @AutoMatter.Field("theater_id") String theater_id,
         @AutoMatter.Field("seats") List<Integer> seats) {
       if (showtime_id == null) {
         throw new NullPointerException("showtime_id");
       }
-      if (movie_name == null) {
-        throw new NullPointerException("movie_name");
+      if (movie_id == null) {
+        throw new NullPointerException("movie_id");
       }
       if (date == null) {
         throw new NullPointerException("date");
@@ -232,7 +232,7 @@ public final class ShowtimeBuilder {
         throw new NullPointerException("theater_id");
       }
       this.showtime_id = showtime_id;
-      this.movie_name = movie_name;
+      this.movie_id = movie_id;
       this.date = date;
       this.time = time;
       this.type = type;
@@ -248,8 +248,8 @@ public final class ShowtimeBuilder {
 
     @AutoMatter.Field
     @Override
-    public String movie_name() {
-      return movie_name;
+    public String movie_id() {
+      return movie_id;
     }
 
     @AutoMatter.Field
@@ -298,7 +298,7 @@ public final class ShowtimeBuilder {
       if (showtime_id != null ? !showtime_id.equals(that.showtime_id()) : that.showtime_id() != null) {
         return false;
       }
-      if (movie_name != null ? !movie_name.equals(that.movie_name()) : that.movie_name() != null) {
+      if (movie_id != null ? !movie_id.equals(that.movie_id()) : that.movie_id() != null) {
         return false;
       }
       if (date != null ? !date.equals(that.date()) : that.date() != null) {
@@ -324,7 +324,7 @@ public final class ShowtimeBuilder {
       int result = 1;
       long temp;
       result = 31 * result + (this.showtime_id != null ? this.showtime_id.hashCode() : 0);
-      result = 31 * result + (this.movie_name != null ? this.movie_name.hashCode() : 0);
+      result = 31 * result + (this.movie_id != null ? this.movie_id.hashCode() : 0);
       result = 31 * result + (this.date != null ? this.date.hashCode() : 0);
       result = 31 * result + (this.time != null ? this.time.hashCode() : 0);
       result = 31 * result + (this.type != null ? this.type.hashCode() : 0);
@@ -337,7 +337,7 @@ public final class ShowtimeBuilder {
     public String toString() {
       return "Showtime{" +
       "showtime_id=" + showtime_id +
-      ", movie_name=" + movie_name +
+      ", movie_id=" + movie_id +
       ", date=" + date +
       ", time=" + time +
       ", type=" + type +

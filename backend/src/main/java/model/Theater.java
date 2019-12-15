@@ -9,5 +9,5 @@ public interface Theater {
     String theater_id();
     List<String> theater_address();
     String theater_phone();
-    Integer admin_id();
+    String admin_id();
 }

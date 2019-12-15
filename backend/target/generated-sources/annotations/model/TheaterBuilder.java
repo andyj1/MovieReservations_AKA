@@ -17,7 +17,7 @@ public final class TheaterBuilder {
 
   private String theater_phone;
 
-  private Integer admin_id;
+  private String admin_id;
 
   public TheaterBuilder() {
   }
@@ -119,11 +119,11 @@ public final class TheaterBuilder {
     return this;
   }
 
-  public Integer admin_id() {
+  public String admin_id() {
     return admin_id;
   }
 
-  public TheaterBuilder admin_id(Integer admin_id) {
+  public TheaterBuilder admin_id(String admin_id) {
     if (admin_id == null) {
       throw new NullPointerException("admin_id");
     }
@@ -151,12 +151,12 @@ public final class TheaterBuilder {
 
     private final String theater_phone;
 
-    private final Integer admin_id;
+    private final String admin_id;
 
     private Value(@AutoMatter.Field("theater_id") String theater_id,
         @AutoMatter.Field("theater_address") List<String> theater_address,
         @AutoMatter.Field("theater_phone") String theater_phone,
-        @AutoMatter.Field("admin_id") Integer admin_id) {
+        @AutoMatter.Field("admin_id") String admin_id) {
       if (theater_id == null) {
         throw new NullPointerException("theater_id");
       }
@@ -192,7 +192,7 @@ public final class TheaterBuilder {
 
     @AutoMatter.Field
     @Override
-    public Integer admin_id() {
+    public String admin_id() {
       return admin_id;
     }
 

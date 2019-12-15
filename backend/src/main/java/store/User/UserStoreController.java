@@ -92,28 +92,34 @@ public class UserStoreController implements UserStore {
     // TODO: get user object given username
     public User getUser(String user_name) {
         Document doc;
-        doc = userCollection.find(eq("username", new String(user_name))).first();
-        String user_id = doc.getObjectId("_id").toHexString();
-        String name = doc.getString("name");
-        String username = doc.getString("username");
-        String password = doc.getString("password");
-        String email = doc.getString("email");
-        Boolean admin = doc.getBoolean("admin");
-        Date created_at = doc.getDate("created_at");
-        String favorite_genre = doc.getString("favorite_genre");
-        String zip_code = doc.getString("zip_code");
-        // build a user object (auto-matter)
-        User user = new UserBuilder()
-                .user_id(user_id)
-                .name(name)
-                .username(username)
-                .password(password)
-                .email(email)
-                .admin(admin)
-                .created_at(created_at)
-                .favorite_genre(favorite_genre)
-                .zip_code(zip_code)
-                .build();
+        User user;
+        try{
+            doc = userCollection.find(eq("username", new String(user_name))).first();
+            String user_id = doc.getObjectId("_id").toHexString();
+            String name = doc.getString("name");
+            String username = doc.getString("username");
+            String password = doc.getString("password");
+            String email = doc.getString("email");
+            Boolean admin = doc.getBoolean("admin");
+            Date created_at = doc.getDate("created_at");
+            String favorite_genre = doc.getString("favorite_genre");
+            String zip_code = doc.getString("zip_code");
+            // build a user object (auto-matter)
+            user = new UserBuilder()
+                    .user_id(user_id)
+                    .name(name)
+                    .username(username)
+                    .password(password)
+                    .email(email)
+                    .admin(admin)
+                    .created_at(created_at)
+                    .favorite_genre(favorite_genre)
+                    .zip_code(zip_code)
+                    .build();
+        } catch (Exception e){
+            e.printStackTrace();
+            user = null;
+        }
         return user;
     }
 
@@ -134,8 +140,6 @@ public class UserStoreController implements UserStore {
         String token = null;
         try{
             if(authenticate(username, password)){
-                System.err.println("**********************************************************************");
-                System.err.println(username);
                 token = tokenGenerator.makeToken(username);
             }
         } catch (Exception e){

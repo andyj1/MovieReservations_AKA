@@ -4,6 +4,8 @@ import org.apache.log4j.BasicConfigurator;
 import org.bson.Document;
 import org.eclipse.jetty.http.HttpStatus;
 import org.json.JSONObject;
+import store.FoodReservation.FoodReservationStore;
+import store.FoodReservation.FoodReservationStoreController;
 import store.Seating.SeatingStore;
 import store.Seating.SeatingStoreController;
 import store.Showtime.ShowtimeStore;
@@ -27,6 +29,7 @@ public class Application {
     private static TheaterStore ts = new TheaterStoreController();
     private static ShowtimeStore ss = new ShowtimeStoreController();
     private static SeatingStore seatings = new SeatingStoreController();
+    private static FoodReservationStore frs = new FoodReservationStoreController();
 
     public static void main(String[] args) {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -142,6 +145,23 @@ public class Application {
             }
 
         });
+
+//        get("/food", "application/json", (req, res) -> {
+//            final String theater = req.queryParams("theater_name");
+//            final String date = req.queryParams("date");
+//            final String movie = req.queryParams("movie_name");
+//            final String time = req.queryParams("time");
+//            final String food = req.queryParams("seats");
+//            final Integer quantity = Integer.parseInt(req.queryParams("seats"));
+//            final String username = req.queryParams("username");
+//            String id = ss.getShowtimeId(time, movie, theater, date);
+//            if(id != null){
+//                FoodReservation foodReservation = ;
+//                return foodReservation;
+//            } else{
+//                return "Invalid Showtime Selection";
+//            }
+//        });
     }
 
 }

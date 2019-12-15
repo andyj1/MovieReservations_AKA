@@ -41,7 +41,7 @@ public class FoodReservationStoreController implements FoodReservationStore {
         try{
             Document doc = foodReservationCollection.find(eq("user_id", id)).first();
             if (!doc.isEmpty()) {
-                return doc.getObjectId("_id").toHexString();
+                return doc.getString("user_id");
             }
             return null;
         } catch (MongoException e) {
@@ -55,7 +55,7 @@ public class FoodReservationStoreController implements FoodReservationStore {
         try{
             Document doc = foodReservationCollection.find(eq("showtime_id", id)).first();
             if (!doc.isEmpty()) {
-                return doc.getObjectId("_id").toHexString();
+                return doc.getString("showtime_id");
             }
             return null;
         } catch (MongoException e) {
@@ -69,7 +69,7 @@ public class FoodReservationStoreController implements FoodReservationStore {
         try{
             Document doc = foodReservationCollection.find(eq("food_id", id)).first();
             if (!doc.isEmpty()) {
-                return doc.getObjectId("_id").toHexString();
+                return doc.getString("food_id");
             }
             return null;
         } catch (MongoException e) {

@@ -3,6 +3,7 @@ package store.FoodReservation;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.typesafe.config.Config;
@@ -16,6 +17,10 @@ import store.Showtime.ShowtimeStoreController;
 import store.User.UserStore;
 import store.User.UserStoreController;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 public class FoodReservationStoreController implements FoodReservationStore {
@@ -66,6 +71,33 @@ public class FoodReservationStoreController implements FoodReservationStore {
             foodReservation = null;
         }
         return foodReservation;
+    }
+
+    @Override
+    public List<FoodReservation> getFoodReservations(String username) {
+        FindIterable<Document> iterable = foodReservationCollection.find(eq("username", username));
+        List<FoodReservation> foodReservations = new ArrayList<>();
+        try{
+            for(Document doc : iterable){
+                String showtime_id = doc.getString("showtime_id");
+                String food_id = doc.getString("food_id");
+                Integer count = (Integer) doc.get("count");
+                String id = doc.getObjectId("_id").toHexString();
+
+                FoodReservation foodReservation = new FoodReservationBuilder()
+                        .showtime_id(showtime_id)
+                        .food_res_id(id)
+                        .count(count)
+                        .food_id(food_id)
+                        .user_id(username)
+                        .build();
+
+                foodReservations.add(foodReservation);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return foodReservations;
     }
 
     @Override

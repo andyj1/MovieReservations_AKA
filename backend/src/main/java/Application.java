@@ -8,6 +8,8 @@ import store.Food.FoodStore;
 import store.Food.FoodStoreController;
 import store.FoodReservation.FoodReservationStore;
 import store.FoodReservation.FoodReservationStoreController;
+import store.Movie.MovieStore;
+import store.Movie.MovieStoreController;
 import store.Seating.SeatingStore;
 import store.Seating.SeatingStoreController;
 import store.Showtime.ShowtimeStore;
@@ -33,6 +35,7 @@ public class Application {
     private static SeatingStore seatings = new SeatingStoreController();
     private static FoodReservationStore frs = new FoodReservationStoreController();
     private static FoodStore fs = new FoodStoreController();
+    private static MovieStore ms = new MovieStoreController();
 
     public static void main(String[] args) {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -119,6 +122,13 @@ public class Application {
             return showtimes;
         });
 
+        get("/movie_showtimes", "application/json", (req, res) -> {
+            final String movie = req.queryParams("movie_name");
+            final String date = req.queryParams("date");
+            List<Showtime> showtimes = ss.getShowtimesByMovie(movie, date);
+            return showtimes;
+        });
+
         get("/showtimes", "application/json", (req, res) -> {
             final String theater = req.queryParams("theater_name");
             final String date = req.queryParams("date");
@@ -146,7 +156,28 @@ public class Application {
             } else{
                 return "Invalid Showtime Selection";
             }
+        });
 
+        get("/get_seats", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            List<Seating> seating = seatings.getSeating(username);
+            return seating;
+        });
+
+        get("/get_food", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            List<FoodReservation> foodReservations = frs.getFoodReservations(username);
+            return foodReservations;
+        });
+
+        get("/movie_info", "application/json", (req, res) -> {
+            final String movie_name = req.queryParams("movie_name");
+            Movie movie = ms.getMovieInfo(movie_name);
+            if(movie == null){
+                return "Movie Info Not Available";
+            } else{
+                return movie;
+            }
         });
 
         get("/food", "application/json", (req, res) -> {
@@ -163,6 +194,44 @@ public class Application {
                 return foodReservation;
             } else{
                 return "Invalid Showtime Selection";
+            }
+        });
+
+        get("/user", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            User user = us.getUserProfile(username);
+            return user;
+        });
+
+        get("/add_food", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            final String foodId = req.queryParams("food_id");
+            final String foodDesc = req.queryParams("food_desc");
+            User user = us.getUserProfile(username);
+            if(user.admin()){
+                Food food = fs.addFood(foodId, foodDesc);
+                return food;
+            } else{
+                return "User is not an Admin";
+            }
+        });
+
+        get("/add_showtime", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            final String movie_name = req.queryParams("movie_name");
+            final String theater_name = req.queryParams("theater_name");
+            final String date = req.queryParams("date");
+            final String time = req.queryParams("time");
+            final String type = req.queryParams("type");
+            User user = us.getUserProfile(username);
+            if(user.admin()){
+                Showtime showtime = ss.addShowtime(movie_name,theater_name, date, time, type);
+                if(showtime == null){
+                    return "Unable to add showtime";
+                }
+                return showtime;
+            } else{
+                return "User is not an Admin";
             }
         });
     }

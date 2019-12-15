@@ -2,6 +2,7 @@ package store.Seating;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.typesafe.config.Config;
@@ -21,6 +22,7 @@ import store.User.UserStoreController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import static com.mongodb.client.model.Filters.eq;
 
 public class SeatingStoreController implements SeatingStore{
 
@@ -77,6 +79,30 @@ public class SeatingStoreController implements SeatingStore{
         } catch (Exception e){
             e.printStackTrace();
             seating = null;
+        }
+        return seating;
+    }
+
+    @Override
+    public List<Seating> getSeating(String username) {
+        FindIterable<Document> iterable = seatingCollection.find(eq("username", username));
+        List<Seating> seating = new ArrayList<>();
+        try{
+            for(Document doc : iterable){
+                String showtime_id = doc.getString("showtime_id");
+                String id = doc.getObjectId("_id").toHexString();
+                List<Integer> seat_num = (List<Integer>)doc.get("seat_num");
+
+                Seating seat = new SeatingBuilder()
+                        .showtime_id(showtime_id)
+                        .seat_num(seat_num)
+                        .user_id(username)
+                        .build();
+
+                seating.add(seat);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
         return seating;
     }

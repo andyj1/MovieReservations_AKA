@@ -20,9 +20,9 @@ public final class MovieBuilder {
 
   private String critic_rating;
 
-  private String critic_count;
+  private Integer critic_count;
 
-  private String audience_count;
+  private Integer audience_count;
 
   private String description;
 
@@ -122,20 +122,20 @@ public final class MovieBuilder {
     return this;
   }
 
-  public String critic_count() {
+  public Integer critic_count() {
     return critic_count;
   }
 
-  public MovieBuilder critic_count(@Nullable String critic_count) {
+  public MovieBuilder critic_count(@Nullable Integer critic_count) {
     this.critic_count = critic_count;
     return this;
   }
 
-  public String audience_count() {
+  public Integer audience_count() {
     return audience_count;
   }
 
-  public MovieBuilder audience_count(@Nullable String audience_count) {
+  public MovieBuilder audience_count(@Nullable Integer audience_count) {
     this.audience_count = audience_count;
     return this;
   }
@@ -362,9 +362,9 @@ public final class MovieBuilder {
 
     private final String critic_rating;
 
-    private final String critic_count;
+    private final Integer critic_count;
 
-    private final String audience_count;
+    private final Integer audience_count;
 
     private final String description;
 
@@ -385,8 +385,8 @@ public final class MovieBuilder {
     private Value(@AutoMatter.Field("movie_id") String movie_id,
         @AutoMatter.Field("title") String title, @AutoMatter.Field("consensus") String consensus,
         @AutoMatter.Field("critic_rating") String critic_rating,
-        @AutoMatter.Field("critic_count") String critic_count,
-        @AutoMatter.Field("audience_count") String audience_count,
+        @AutoMatter.Field("critic_count") Integer critic_count,
+        @AutoMatter.Field("audience_count") Integer audience_count,
         @AutoMatter.Field("description") String description,
         @AutoMatter.Field("rating") String rating, @AutoMatter.Field("genre") List<String> genre,
         @AutoMatter.Field("director") List<String> director,
@@ -441,13 +441,13 @@ public final class MovieBuilder {
 
     @AutoMatter.Field
     @Override
-    public String critic_count() {
+    public Integer critic_count() {
       return critic_count;
     }
 
     @AutoMatter.Field
     @Override
-    public String audience_count() {
+    public Integer audience_count() {
       return audience_count;
     }
 

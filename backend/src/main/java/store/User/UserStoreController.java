@@ -123,6 +123,38 @@ public class UserStoreController implements UserStore {
         return user;
     }
 
+    public User getUserProfile(String user_name) {
+        Document doc;
+        User user;
+        try{
+            doc = userCollection.find(eq("username", new String(user_name))).first();
+            String user_id = doc.getObjectId("_id").toHexString();
+            String name = doc.getString("name");
+            String username = doc.getString("username");
+            String email = doc.getString("email");
+            Boolean admin = doc.getBoolean("admin");
+            Date created_at = doc.getDate("created_at");
+            String favorite_genre = doc.getString("favorite_genre");
+            String zip_code = doc.getString("zip_code");
+            // build a user object (auto-matter)
+            user = new UserBuilder()
+                    .user_id(user_id)
+                    .name(name)
+                    .username(username)
+                    .password("")
+                    .email(email)
+                    .admin(admin)
+                    .created_at(created_at)
+                    .favorite_genre(favorite_genre)
+                    .zip_code(zip_code)
+                    .build();
+        } catch (Exception e){
+            e.printStackTrace();
+            user = null;
+        }
+        return user;
+    }
+
     // TODO: set password given username and old password
     public void setPassword(String username, String oldPassword, String newPassword) {
         Document doc = userCollection.find(eq("username", new String(username))).first();

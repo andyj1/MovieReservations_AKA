@@ -10,6 +10,7 @@ import Signup from './signup'
 import Movies from './movies'
 import Movie from './movie'
 import Theaters from './theaters'
+import Theater from './theater'
 import Reservation from './reservation'
 
 class App extends Component {
@@ -34,6 +35,7 @@ class App extends Component {
               <Route exact path="/Movies" component={Movies} />
               <Route exact path="/Theaters" component={Theaters} />
               <Route exact path="/Movie/:movie" component={Movie} />
+              <Route exact path="/Theater/:theater" component={Theater}/>
               <Route exact path="/Reservation" component={Reservation} />
               <Route exact path="/Signup" component={Signup} />
             </Switch>

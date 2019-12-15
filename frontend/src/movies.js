@@ -15,7 +15,8 @@ class Movies extends Component {
 
   componentDidMount() {
     fetch('http://192.168.1.158:1010/movies')
-      .then(response => console.log(response.text()));
+      .then(response => response.text())
+      .then(data => this.setState({movies: data.substring(1, data.length-2).split(', ')}));
 
   }
 

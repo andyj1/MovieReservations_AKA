@@ -16,11 +16,16 @@ class Movie extends Component {
                 "AMC Weast": ["3:45 PM", "5:55 PM", "5:30 PM"]
             },
             dates: ["12/11/2019", "12/12/2019", "12/13/2019"],
-            date: "12/11/2019"
+            date: "12/11/2019",
         };
     }
     componentDidMount() {
-        this.setState({movie: this.props.match.params.movie})
+        var movie_name = decodeURI(this.props.match.params.movie);
+        this.setState({movie: movie_name});
+        fetch('http://192.168.1.158:1010/movie_showtime?movie_name=' + movie_name
+            + '&date=' + '2019-12-11')
+          .then(response => response.json())
+          .then(data => console.log(data));
     };
 
     showReservation = (event, theater, time) => (

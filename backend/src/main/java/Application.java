@@ -156,13 +156,12 @@ public class Application {
             } else{
                 return "Invalid Showtime Selection";
             }
-
         });
 
         get("/get_seats", "application/json", (req, res) -> {
             final String username = req.queryParams("username");
             List<Seating> seating = seatings.getSeating(username);
-            return  seating;
+            return seating;
         });
 
         get("/get_food", "application/json", (req, res) -> {
@@ -195,6 +194,44 @@ public class Application {
                 return foodReservation;
             } else{
                 return "Invalid Showtime Selection";
+            }
+        });
+
+        get("/user", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            User user = us.getUserProfile(username);
+            return user;
+        });
+
+        get("/add_food", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            final String foodId = req.queryParams("food_id");
+            final String foodDesc = req.queryParams("food_desc");
+            User user = us.getUserProfile(username);
+            if(user.admin()){
+                Food food = fs.addFood(foodId, foodDesc);
+                return food;
+            } else{
+                return "User is not an Admin";
+            }
+        });
+
+        get("/add_showtime", "application/json", (req, res) -> {
+            final String username = req.queryParams("username");
+            final String movie_name = req.queryParams("movie_name");
+            final String theater_name = req.queryParams("theater_name");
+            final String date = req.queryParams("date");
+            final String time = req.queryParams("time");
+            final String type = req.queryParams("type");
+            User user = us.getUserProfile(username);
+            if(user.admin()){
+                Showtime showtime = ss.addShowtime(movie_name,theater_name, date, time, type);
+                if(showtime == null){
+                    return "Unable to add showtime";
+                }
+                return showtime;
+            } else{
+                return "User is not an Admin";
             }
         });
     }

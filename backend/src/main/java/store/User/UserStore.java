@@ -8,6 +8,7 @@ public interface UserStore {
     boolean authenticate(String username, String password);
 
     User getUser(String user_name);
+    User getUserProfile(String user_name);
 
     String login(String username, String password);
 

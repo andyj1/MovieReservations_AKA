@@ -7,6 +7,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import model.Food;
+import model.FoodBuilder;
 import org.bson.Document;
 import utils.tokenizer;
 
@@ -21,6 +23,25 @@ public class FoodStoreController implements FoodStore {
 
     public FoodStoreController() {
         this.config = config;
+    }
+
+    @Override
+    public Food addFood(String food_id, String food_desc) {
+        Food food = null;
+        try{
+            food = new FoodBuilder()
+                    .food_id(food_id)
+                    .food_desc(food_desc)
+                    .build();
+            Document foodDoc = new Document()
+                    .append("food_id", food_id)
+                    .append("food_desc", food_desc);
+            foodCollection.insertOne(foodDoc);
+        } catch (Exception e){
+            e.printStackTrace();
+            food = null;
+        }
+        return food;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class tokenizer {
     }
 
     public String verifyToken(String token) {
-        String uid = null;
+        String username = null;
         try {
             Algorithm algorithm = Algorithm.HMAC512(this.secret);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -31,11 +31,11 @@ public class tokenizer {
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             Map<String, Claim> claims = jwt.getClaims();
-            uid = claims.get("id").asString();
+            username = claims.get("username").asString();
         } catch (JWTVerificationException exception) {
             return null;
         }
-        return uid;
+        return username;
     }
 
     public String makeToken(String username) {

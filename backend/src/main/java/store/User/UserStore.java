@@ -10,7 +10,7 @@ public interface UserStore {
     User getUser(String user_name);
     User getUserProfile(String user_name);
 
-    String login(String username, String password);
+    String generateToken(String username, String password);
 
     void setPassword(String username, String oldPassword, String newPassword);
 

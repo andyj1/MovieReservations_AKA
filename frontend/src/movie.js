@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {Jumbotron, Button, Accordion, Card, ButtonToolbar, DropdownButton, Dropdown} from "react-bootstrap";
+import loggedIn from './loggedIn'
 
-const loggedIn = () => (
-    true
-);
 
 class Movie extends Component {
     constructor(props) {

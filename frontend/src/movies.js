@@ -13,6 +13,12 @@ class Movies extends Component {
       this.props.history.push('/movie/' + movie)
   );
 
+  componentDidMount() {
+    fetch('http://192.168.1.158:1010/movies')
+      .then(response => console.log(response.text()));
+
+  }
+
   showRecentMovies = () => (
       <Carousel bg="dark" variant="dark">
         {this.state.movies.map((movie, index) => (

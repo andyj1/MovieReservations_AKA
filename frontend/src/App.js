@@ -5,12 +5,12 @@ import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import signup from './signup'
+import Signin from './signin'
+import Signup from './signup'
 import Movies from './movies'
 import Movie from './movie'
 import Theaters from './theaters'
 import Reservation from './reservation'
-
 
 class App extends Component {
   render() {
@@ -30,11 +30,12 @@ class App extends Component {
           </Navbar>
           <Router>
             <Switch>
-              <Route exact path="/" component={signup} />
+              <Route exact path="/" component={Signin} />
               <Route exact path="/Movies" component={Movies} />
               <Route exact path="/Theaters" component={Theaters} />
               <Route exact path="/Movie/:movie" component={Movie} />
               <Route exact path="/Reservation" component={Reservation} />
+              <Route exact path="/Signup" component={Signup} />
             </Switch>
           </Router>
         </>

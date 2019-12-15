@@ -8,6 +8,12 @@ class Theaters extends Component{
       theaters: ["AMC west", "AMC north", "AMC east"]
     };
   }
+  componentDidMount() {
+    fetch('http://192.168.1.158:1010/theaters', {
+      method: 'GET',
+    }).then(response => response.json())
+      .then(data => console.log(data));
+  }
 
   showNearbyTheaters = () => (
       <Accordion>

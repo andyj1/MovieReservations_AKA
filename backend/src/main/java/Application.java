@@ -1,9 +1,6 @@
-import com.google.gson.JsonObject;
 import model.*;
 import org.apache.log4j.BasicConfigurator;
-import org.bson.Document;
 import org.eclipse.jetty.http.HttpStatus;
-import org.json.JSONObject;
 import store.Food.FoodStore;
 import store.Food.FoodStoreController;
 import store.FoodReservation.FoodReservationStore;
@@ -18,7 +15,6 @@ import store.Theater.TheaterStore;
 import store.Theater.TheaterStoreController;
 import store.User.UserStore;
 import store.User.UserStoreController;
-import utils.tokenizer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,11 +60,7 @@ public class Application {
 
                     return "OK";
                 });
-
         before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
-
-        get("/start", (req, res) -> "Hello, World!");
-        // parameter from request -- username --> returns corresponding user
 
         get("/signup", "application/json", (req, res) -> {
             final String username = req.queryParams("username");
@@ -93,14 +85,22 @@ public class Application {
 
             us.addUser(user);
 
-            return HttpStatus.OK_200;
+            return HttpStatus.OK_200; // directly deliver status code since not using handler for setting response status
         });
 
+        // if token is present in the header, use it to
         get("/login", "application/json", (req, res) -> {
             res.type("application/json");
+            String token = req.headers("token");
+
             final String username = req.queryParams("username");
             final String password = req.queryParams("password");
-            String token = us.login(username, password);
+            if (!token.isEmpty()) {
+                return HttpStatus.OK_200;
+            } else {
+                // generateToken generate a string token after authenticating username and password
+                token = us.generateToken(username, password);
+            }
             return token;
         }, json());
 

@@ -28,7 +28,7 @@ public class UserStoreController implements UserStore {
 
     public UserStoreController() {
         this.config = config;
-        tokenGenerator = new tokenizer();
+        this.tokenGenerator = new tokenizer();
     }
 
     // TODO: add a user to database given a User object
@@ -74,11 +74,16 @@ public class UserStoreController implements UserStore {
 
     // TODO: verifies Y/N whether user exists and password is valid
     public boolean authenticate(String username, String password) {
+        User user = null;
         if (username.isEmpty() || password.isEmpty()) {
             return false;
         }
-        User user = getUser(username);
-        if (user == null) {
+        try {
+            user = getUser(username);
+            if (user == null) {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
         if(!user.password().equals(password)){
@@ -167,12 +172,12 @@ public class UserStoreController implements UserStore {
         }
     }
 
-    // TODO: login with username and password
-    public String login(String username, String password){
+    // TODO: return token upon login with valid username and password
+    public String generateToken(String username, String password){
         String token = null;
         try{
             if(authenticate(username, password)){
-                token = tokenGenerator.makeToken(username);
+                token = this.tokenGenerator.makeToken(username);
             }
         } catch (Exception e){
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -181,7 +186,7 @@ public class UserStoreController implements UserStore {
         if(token != null){
             return token;
         } else{
-            return "invalid login";
+            return "login failed.";
         }
     }
 

@@ -19,8 +19,6 @@ public class FoodStoreController implements FoodStore {
     MongoDatabase database = dbClient.getDatabase(config.getString("mongo.database"));
     MongoCollection<Document> foodCollection = database.getCollection(this.config.getString("mongo.collection_food"));
 
-    private static tokenizer tokenGenerator;
-
     public FoodStoreController() {
         this.config = config;
     }
@@ -30,7 +28,7 @@ public class FoodStoreController implements FoodStore {
         try{
             Document doc = foodCollection.find(eq("food_desc", food)).first();
             if (!doc.isEmpty()) {
-                return doc.getObjectId("_id").toHexString();
+                return doc.getString("food_id");
             }
             return null;
         } catch (MongoException e) {
@@ -42,7 +40,7 @@ public class FoodStoreController implements FoodStore {
     @Override
     public String getFoodDesc(String id) {
         try{
-            Document doc = foodCollection.find(eq("_id", id)).first();
+            Document doc = foodCollection.find(eq("food_id", id)).first();
             if (!doc.isEmpty()) {
                 return doc.getString("food_desc");
             }

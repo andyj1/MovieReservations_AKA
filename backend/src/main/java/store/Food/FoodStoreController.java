@@ -7,19 +7,23 @@ import com.mongodb.client.MongoDatabase;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.bson.Document;
+import store.Showtime.ShowtimeStore;
+import store.Showtime.ShowtimeStoreController;
+import store.User.UserStore;
+import store.User.UserStoreController;
 
 public class FoodStoreController implements FoodStore {
 
-    private final Config config;
-    private MongoClient dbClient;
-    private MongoDatabase database;
-    private MongoCollection<Document> foodCollection;
+    Config config = ConfigFactory.load("AKA.conf");
+    MongoClient dbClient = new MongoClient(new MongoClientURI(config.getString("mongo.uri")));
+    MongoDatabase database = dbClient.getDatabase(config.getString("mongo.database"));
+    MongoCollection<Document> foodCollection = database.getCollection(config.getString("mongo.collection_food"));
 
-    public FoodStoreController(Config config) {
-        this.config = ConfigFactory.load("AKA.conf");
-        dbClient = new MongoClient(new MongoClientURI(config.getString("mongo.uri")));
-        database = dbClient.getDatabase("mongo.database");
-        foodCollection = database.getCollection(this.config.getString("mongo.collection_food"));
+    UserStore us = new UserStoreController();
+    ShowtimeStore ss = new ShowtimeStoreController();
+
+    public FoodStoreController() {
+        this.config = config;
     }
 
     @Override

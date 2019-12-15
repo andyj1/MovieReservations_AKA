@@ -8,6 +8,7 @@ public interface ShowtimeStore {
     List<String> getPopMovies();
     List<Showtime> getAllShowtimes(String theater, String date);
     List<Showtime> getShowtimes(String theater, String date, String movie);
+    List<Showtime> getShowtimesByMovie(String movie, String date);
     String getShowtimeId(String time, String name, String theater_id, String date);
     Showtime getShowtimeById(String id);
     String getMovieName(String id);

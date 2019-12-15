@@ -89,6 +89,30 @@ public class ShowtimeStoreController implements ShowtimeStore{
     }
 
     @Override
+    public List<Showtime> getShowtimesByMovie(String movie, String date) {
+        FindIterable<Document> iterable = showtimeCollection.find(and(eq("movie_name", movie), eq("date", date) ));
+        List<Showtime> showtimes = new ArrayList<>();
+        for(Document doc : iterable){
+            String theater = doc.getString("theater_name");
+            String time = doc.getString("time");
+            String type = doc.getString("type");
+            List<Integer> seats = (List<Integer>)doc.get("seats");
+
+            Showtime showtime = new ShowtimeBuilder()
+                    .showtime_id("")
+                    .movie_id(movie)
+                    .theater_id(theater)
+                    .date(date)
+                    .time(time)
+                    .type(type)
+                    .seats(seats)
+                    .build();
+            showtimes.add(showtime);
+        }
+        return showtimes;
+    }
+
+    @Override
     public String getShowtimeId(String time, String name, String theater_id, String date) {
         String id = null;
         try{

@@ -1,8 +1,11 @@
 package store.Movie;
 
+import model.Movie;
+
 import java.util.List;
 
 public interface MovieStore {
+    Movie getMovieInfo(String movie_name);
     String getMovieId(String title);
     String getMovieTitle(String id);
     String getConsensus(String id);

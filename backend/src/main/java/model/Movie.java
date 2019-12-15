@@ -11,8 +11,8 @@ public interface Movie {
     @Nullable
     String consensus();
     @Nullable String critic_rating();
-    @Nullable String critic_count();
-    @Nullable String audience_count();
+    @Nullable Integer critic_count();
+    @Nullable Integer audience_count();
     @Nullable String description();
     @Nullable String rating();
     @Nullable List<String> genre();

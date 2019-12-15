@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Jumbotron, Container, Row, Col, Button, ButtonToolbar, Dropdown, SplitButton} from "react-bootstrap";
+import {Jumbotron, Container, Row, Col, Button, Form} from "react-bootstrap";
 
 class Reservation extends Component {
     constructor(props) {
@@ -9,10 +9,11 @@ class Reservation extends Component {
             theater: '',
             date: '',
             time: '',
-            seatchosen: '',
+            seatchosen: [],
             status: false,
             seats: [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 15, 17, 18, 20, 21, 25, 28, 30],
             seat: [],
+            seat1d: []
         };
     }
     createSeatIndex = () => {
@@ -23,23 +24,19 @@ class Reservation extends Component {
           seatid < 31 ? seat[seatid - 1] = 1 : console.log('Invalid Index' + seatid)
         ));
         return seat;
-        /*
-        while (seat.length) {
-            arrange_seats.push(seat.splice(0, 5));
-        }
-        */
     };
 
     static getDerivedStateFromProps(prevProps, prevState) {
         if (prevProps.location.state == null) {
             prevProps.history.replace('/Movies')
             return null;
-        } else {
+        } else if (prevState.seat1d.length === 0) {
             let seat = new Array(30).fill(0);
             prevState.seats.map((seatid) => (
               seatid < 31 ? seat[seatid - 1] = 1 : console.log('Invalid Index' + seatid)
             ));
-            var arrange_seats = []
+            var arrange_seats = [];
+            var temp = [...seat];
             while (seat.length) {
                 arrange_seats.push(seat.splice(0, 5));
             }
@@ -48,43 +45,102 @@ class Reservation extends Component {
                 theater: prevProps.location.state.theater,
                 time: prevProps.location.state.time,
                 date: prevProps.location.state.date,
-                seat: arrange_seats
+                seat: arrange_seats,
+                seat1d: temp,
             };
+        } else {
+            return {
+                seat: prevState.seat
+            }
         }
 
     };
 
-    handleSeatClick = (event, index) => (
+    handleSeatClick = (event, index) => {
+      var reserved_seats = this.state.seat1d.reduce(function(a, e, i) {
+          if (e === 2)
+              a.push(i);
+          return a;
+      }, []);
+      if (reserved_seats instanceof Array && reserved_seats.includes(index)) {
+          var temp = this.state.seat1d;
+          temp[index] = 1;
+      } else {
+          var temp = this.state.seat1d;
+          temp[index] = 2;
+      }
+      var arrange_seats = [];
+      var seat = [...temp]
+      while (seat.length) {
+        arrange_seats.push(seat.splice(0, 5));
+      }
       this.setState({
-          seatchosen: index,
-          status: true,
-      })
+          seat1d: temp,
+          seat: arrange_seats
+      });
+      console.log(this.state.seat1d)
+    };
+
+    handleSeatReserve = (event) => (
+      this.setState({status: true})
     );
+
     createSeatGrid = () => (
+      <>
         <Container style={{width: '25vw', height: '20vh'}}>
             {this.state.seat.map((seatRow, index) => (
               <Row key={index + 100}>
                   {seatRow.map((seatState, index2) => (
                     <Col key={index2 + 200} style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
                         <div style={{width: '5vw', height: '4vh'}}>
-                        {seatState ?
-                          <Button onClick={(e) => this.handleSeatClick(e, index * 5 + index2)}variant='primary' block>
-                              {index * 5 + index2}
+                        {seatState === 1 ?
+                          <Button onClick={(e) => this.handleSeatClick(e, index * 5 + index2)} variant='primary' block>
+                              <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
+                                {index * 5 + index2}
+                              </div>
                           </Button>
-                          : <Button variant='primary' disabled  block>
-                              {index * 5 + index2}
+                          : seatState === 2 ?
+                            <Button onClick={(e) => this.handleSeatClick(e, index * 5 + index2)} variant="outline-primary" block>
+                                <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
+                                    {index * 5 + index2}
+                                </div>
+                            </Button>
+                            : <Button variant='primary' disabled  block>
+                              <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
+                                  {index * 5 + index2}
+                              </div>
                           </Button>}
                         </div>
                     </Col>
                   ))}
               </Row>
             ))}
+            <Row>
+                <Button onClick={(e) => this.handleSeatReserve(e)}type="submit" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '5vh'}}>
+                    <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
+                        Continue
+                    </div>
+                </Button>
+            </Row>
         </Container>
+
+      </>
     );
+
+
 
     showFoods = () => (
         <>
-
+            <Form>
+                <Form.Group as={Row} controlId="popcorn">
+                    <Form.Label column sm={2}>
+                        Popcorn
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="number" placeholder="Enter Amount"/>
+                    </Col>
+                </Form.Group>
+            </Form>
         </>
     );
 
@@ -92,7 +148,7 @@ class Reservation extends Component {
 
 
         return (
-            <Jumbotron>
+            <Jumbotron style={{height: '70vh'}}>
                 <h1>{this.state.movie}</h1>
                 <h4>{this.state.theater}</h4>
                 <h4>{this.state.date + ' ' + this.state.time}</h4>

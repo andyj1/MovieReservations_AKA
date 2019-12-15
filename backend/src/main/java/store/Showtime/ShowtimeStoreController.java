@@ -2,26 +2,87 @@ package store.Showtime;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import model.Showtime;
+import model.ShowtimeBuilder;
 import org.bson.Document;
 
-import java.util.List;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import java.util.*;
 
 public class ShowtimeStoreController implements ShowtimeStore{
 
-    private final Config config;
-    private MongoClient dbClient;
-    private MongoDatabase database;
-    private MongoCollection<Document> showtimeCollection;
+    Config config = ConfigFactory.load("AKA.conf");
+    MongoClient dbClient = new MongoClient(new MongoClientURI(config.getString("mongo.uri")));
+    MongoDatabase database = dbClient.getDatabase(config.getString("mongo.database"));
+    MongoCollection<Document> showtimeCollection = database.getCollection(config.getString("mongo.collection_showtime"));
 
-    public ShowtimeStoreController(Config config) {
-        this.config = ConfigFactory.load("AKA.conf");
-        dbClient = new MongoClient(new MongoClientURI(config.getString("mongo.uri")));
-        database = dbClient.getDatabase("mongo.database");
-        showtimeCollection = database.getCollection(this.config.getString("mongo.collection_showtime"));
+    public ShowtimeStoreController() {
+        this.config = config;
+    }
+
+    @Override
+    public List<String> getPopMovies() {
+
+        List<String> movies = showtimeCollection.distinct("movie_name", String.class).into(new ArrayList<>());
+        Collections.shuffle(movies);
+        List<String> featured = new ArrayList<>();
+        for(int i = 0; i < 6; i++){
+            featured.add(movies.get(i));
+        }
+        return featured;
+    }
+
+    @Override
+    public List<Showtime> getAllShowtimes(String theater, String date) {
+        FindIterable<Document> iterable = showtimeCollection.find(and(eq("theater_name", theater), eq("date", date) ));
+        List<Showtime> showtimes = new ArrayList<>();
+        for(Document doc : iterable){
+            String movie = doc.getString("movie_name");
+            String time = doc.getString("time");
+            String type = doc.getString("type");
+            List<Integer> seats = (List<Integer>)doc.get("seats");
+
+            Showtime showtime = new ShowtimeBuilder()
+                    .showtime_id("")
+                    .movie_id(movie)
+                    .theater_id(theater)
+                    .date(date)
+                    .time(time)
+                    .type(type)
+                    .seats(seats)
+                    .build();
+            showtimes.add(showtime);
+        }
+        return showtimes;
+    }
+
+    @Override
+    public List<Showtime> getShowtimes(String theater, String date, String movie) {
+        FindIterable<Document> iterable = showtimeCollection.find(and(eq("theater_name", theater), eq("date", date), eq("movie_name", movie) ));
+        List<Showtime> showtimes = new ArrayList<>();
+        for(Document doc : iterable){
+            String time = doc.getString("time");
+            String type = doc.getString("type");
+            List<Integer> seats = (List<Integer>)doc.get("seats");
+
+            Showtime showtime = new ShowtimeBuilder()
+                    .showtime_id("")
+                    .movie_id(movie)
+                    .theater_id(theater)
+                    .date(date)
+                    .time(time)
+                    .type(type)
+                    .seats(seats)
+                    .build();
+            showtimes.add(showtime);
+        }
+        return showtimes;
     }
 
     @Override

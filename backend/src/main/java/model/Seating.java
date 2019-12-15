@@ -8,5 +8,5 @@ import java.util.List;
 public interface Seating {
     String showtime_id();
     List<Integer> seat_num();
-    String user_id();
+    String user_id();   // user id maps to username in reality
 }

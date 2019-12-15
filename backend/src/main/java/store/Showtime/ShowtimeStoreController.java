@@ -1,5 +1,7 @@
 package store.Showtime;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
@@ -10,6 +12,7 @@ import com.typesafe.config.ConfigFactory;
 import model.Showtime;
 import model.ShowtimeBuilder;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -86,9 +89,47 @@ public class ShowtimeStoreController implements ShowtimeStore{
     }
 
     @Override
-    public String getShowtimeId(String time, String name, String theater_id) {
-        return null;
+    public String getShowtimeId(String time, String name, String theater_id, String date) {
+        String id = null;
+        try{
+            FindIterable<Document> iterable = showtimeCollection.find(and(eq("theater_name", theater_id), eq("date", date), eq("movie_name", name), eq("time", time) ));
+            for(Document doc : iterable){
+                id = doc.getObjectId("_id").toHexString();
+                break;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            id = null;
+        }
+        return id;
     }
+
+    @Override
+    public Showtime getShowtimeById(String id) {
+        Showtime showtime = null;
+        FindIterable<Document> iterable = showtimeCollection.find(eq("_id", new ObjectId(id)));
+        for(Document doc : iterable){
+            String movie = doc.getString("movie_name");
+            String theater = doc.getString("theater_name");
+            String date = doc.getString("date");
+            String time = doc.getString("time");
+            String type = doc.getString("type");
+            List<Integer> seats = (List<Integer>)doc.get("seats");
+
+            showtime = new ShowtimeBuilder()
+                    .showtime_id(id)
+                    .movie_id(movie)
+                    .theater_id(theater)
+                    .date(date)
+                    .time(time)
+                    .type(type)
+                    .seats(seats)
+                    .build();
+            break;
+        }
+        return showtime;
+    }
+
 
     @Override
     public String getMovieName(String id) {

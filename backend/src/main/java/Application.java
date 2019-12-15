@@ -1,12 +1,11 @@
 import com.google.gson.JsonObject;
-import model.Showtime;
-import model.Theater;
-import model.User;
-import model.UserBuilder;
+import model.*;
 import org.apache.log4j.BasicConfigurator;
 import org.bson.Document;
 import org.eclipse.jetty.http.HttpStatus;
 import org.json.JSONObject;
+import store.Seating.SeatingStore;
+import store.Seating.SeatingStoreController;
 import store.Showtime.ShowtimeStore;
 import store.Showtime.ShowtimeStoreController;
 import store.Theater.TheaterStore;
@@ -15,6 +14,7 @@ import store.User.UserStore;
 import store.User.UserStoreController;
 import utils.tokenizer;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +26,8 @@ public class Application {
     private static UserStore us = new UserStoreController();
     private static TheaterStore ts = new TheaterStoreController();
     private static ShowtimeStore ss = new ShowtimeStoreController();
+    private static SeatingStore seatings = new SeatingStoreController();
+
     public static void main(String[] args) {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
         //staticFiles.location("/public");
@@ -119,6 +121,27 @@ public class Application {
             return showtimes;
         });
 
+        get("/seats", "application/json", (req, res) -> {
+            final String theater = req.queryParams("theater_name");
+            final String date = req.queryParams("date");
+            final String movie = req.queryParams("movie_name");
+            final String time = req.queryParams("time");
+            final String seats = req.queryParams("seats");
+            final String username = req.queryParams("username");
+            String[] val = seats.split(",");
+            List<Integer> seat = new ArrayList<>();
+            for(int i = 0; i < val.length; i++){
+                seat.add(Integer.parseInt(val[i]));
+            }
+            String id = ss.getShowtimeId(time, movie, theater, date);
+            if(id != null){
+                Seating seating = seatings.createSeating(id, seat, username);
+                return seating;
+            } else{
+                return "Invalid Showtime Selection";
+            }
+
+        });
     }
 
 }

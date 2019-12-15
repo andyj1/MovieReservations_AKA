@@ -1,0 +1,4 @@
+{"_id":{"$oid":"5df5b67cd77e03476442138c"},"food_id":"popcorn_1","food_desc":"buttery goodness"}
+{"_id":{"$oid":"5df5b6e5d77e03476442138d"},"food_id":"popcorn_2","food_desc":"caramel popcorn"}
+{"_id":{"$oid":"5df5b708d77e03476442138e"},"food_id":"soda_1","food_desc":"Coca-Cola (the only real soda)"}
+{"_id":{"$oid":"5df68022284b6e4bd6ff248a"},"food_id":"soda_2","food_desc":"Pepsi"}

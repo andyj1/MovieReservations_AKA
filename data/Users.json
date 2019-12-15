@@ -1,0 +1,5 @@
+{"_id":{"$oid":"5df55a9435490a3e0472d8ea"},"name":"Kevin","username":"kevinlin6543","password":"dinosaur","email":"kevinlin@gmail.com","admin":false,"created_at":{"$date":{"$numberLong":"1576360596594"}}}
+{"_id":{"$oid":"5df55e3e457da34a0d0afa4e"},"name":"Ali","username":"alirahman17","password":"cocacola","email":"alirahman1117@gmail.com","admin":false,"created_at":{"$date":{"$numberLong":"1576361534671"}},"favorite_genre":"Action","zip_code":"10009"}
+{"_id":{"$oid":"5df564e736e235005ed9b518"},"name":"Baz","username":"Alirahman1162","password":"memes","email":"Kevin@andy.house","admin":true,"created_at":{"$date":{"$numberLong":"1576363239314"}},"favorite_genre":"Adventure","zip_code":"10009"}
+{"_id":{"$oid":"5df565c736e235005ed9b519"},"name":"test","username":"test123","password":"12234","email":"test@test.com","admin":true,"created_at":{"$date":{"$numberLong":"1576363463083"}},"favorite_genre":"Comedy","zip_code":"10009"}
+{"_id":{"$oid":"5df565ef36e235005ed9b51a"},"name":"saf","username":"test","password":"12345","email":"1234@gmail.com","admin":false,"created_at":{"$date":{"$numberLong":"1576363503238"}},"favorite_genre":"Mystery","zip_code":"10009"}

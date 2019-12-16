@@ -18,13 +18,15 @@ class Profile extends Component {
   componentDidMount() {
     if (loggedIn()){
       fetch("http://192.168.1.158:1010/user?username=" + localStorage.getItem('username'))
-        .then(response => response.text())
+        .then(response => {if (response.status === 200) return response.json()})
         .then(data => {
-          var user_json = data.substr(0, data.length-1).replace("User{", "");
+          var user_json = data;//.substr(0, data.length-1).replace("User{", "");
+          /*
           user_json = user_json.replace(', password=', '');
           user_json = user_json.replace(/([a-zA-Z0-9-_]+)=([a-zA-Z0-9-: ().@]+)/g, "\"$1\":\"$2\"");
           user_json = '{' + user_json + '}';
           user_json = JSON.parse(user_json);
+           */
 
           this.setState({
             name: user_json['name'],
@@ -58,10 +60,11 @@ class Profile extends Component {
 
   getReservations = () => {
     fetch("http://192.168.1.158:1010/get_seats?username=" + localStorage.getItem('username'))
-      .then(response => response.text())
-      .then(data => console.log(data))
+      .then(response => response.json())
+      .then(data => console.log(data));
+
     fetch("http://192.168.1.158:1010/get_food?username=" + localStorage.getItem('username'))
-      .then(response => response.text())
+      .then(response => response.json())
       .then(data => console.log(data))
   };
   render() {

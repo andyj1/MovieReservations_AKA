@@ -35,9 +35,11 @@ class Movie extends Component {
     //Movie{movie_id=, title=Siddharth, consensus=takes an achingly compassionate and deeply unsettling look at all-too-common circumstances in modern-day India., critic_rating=90%, critic_count=41, audience_count=379, description=Siddharth is the spellbinding and gorgeously wrought tale of one father's journey across India in search of his son. Mehendra is a chain-wallah, eking out a living fixing zippers on the bustling streets of New Delhi. To ease his financial woes, he sends twelve-year-old Siddharth to work in a distant factory. When the boy doesn't come home for the Diwali holiday, Mehendra and his wife Suman slowly begin to suspect that he was kidnapped by child traffickers. With few resources and no connections, Mehendra desperately travels to Punjab and Mumbai with the hope that whoever took Siddharth might return him unharmed. A powerful family drama both heart-rending and suspenseful, Siddharth won Best Film (and Best Director for Richie Mehta) at the South Asian International Film Festival and is an Official Selection of Human Rights Watch. (c) Zeitgeist, rating=NR, genre=[Drama], director=[Richie Mehta], writer=[Richie Mehta], air_date=Jun 27, 2014, runtime=null, studio=Zeitgeist Films}
     getMovieInfo = (movie) => {
         fetch('http://192.168.1.158:1010/movie_info?movie_name=' + movie)
-          .then(response => response.text())
+          .then(response => response.json())
           .then(data => {
               if (data !== 'Movie Info Not Available') {
+                  var movie_json = data;
+                  /*
                   var movie_json = data.substr(0, data.length - 1).replace("Movie{movie_id=, ", "");
                   movie_json = (',' + movie_json).replace(/,([a-zA-Z0-9-:_ ().@']+)=/g, "|$1=");
                   movie_json = ('| ' + movie_json.substr(1, movie_json.length - 1)).replace(/(\| )([a-zA-Z0-9-_']+)=([a-zA-Z0-9-: '.()%,]+)/g, "\"$2\":\"$3\", ");
@@ -51,6 +53,7 @@ class Movie extends Component {
                   console.log(movie_json);
 
                   movie_json = JSON.parse(movie_json);
+                   */
                   this.setState({
                       description: movie_json['description'],
                       genre: movie_json['genre'],

@@ -28,9 +28,10 @@ class Theater extends Component {
   getMovieShowtimes = (date, theater) => {
     fetch('http://192.168.1.158:1010/all_showtimes?theater_name=' + encodeURI(theater)
       + '&date=' + date)
-      .then(response => response.text())
+      .then(response => response.json())
       .then(data => {
         console.log(data);
+        /*
         var temp = data.substr(1, data.length-3).split('}, ');
         var new_arr = temp.map((str, index) => {
           var movie_json = str.replace("Showtime{showtime_id=, ", "");
@@ -40,11 +41,12 @@ class Theater extends Component {
           movie_json = '{' + movie_json + '}';
           return JSON.parse(movie_json);
         });
+         */
         var movies = [];
         var movie_times = [];
         var seats = [];
         var type = [];
-        new_arr.forEach((showtime, index) => {
+        data.forEach((showtime, index) => {
           if (movies.includes(showtime['movie_id'])) {
             movie_times[showtime['movie_id']].push(showtime['time']);
             seats[showtime['movie_id']].push(showtime['seats']);

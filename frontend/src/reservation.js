@@ -126,6 +126,7 @@ class Reservation extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        const form = event.currentTarget;
         let reserved_seats = this.state.seat1d.reduce(function(a, e, i) {
             if (e === 2)
                 a.push(i+1);
@@ -135,6 +136,10 @@ class Reservation extends Component {
         console.log(this.state.date);
         console.log(this.state.movie);
         console.log(this.state.time);
+        console.log(form.elements.popcornL.value);
+        console.log(form.elements.popcornS.value);
+        console.log(form.elements.soda.value);
+
         console.log(reserved_seats.toString());
         fetch('http://192.168.1.158:1010/seats?theater_name=' + this.state.theater
             + '&date=' + this.state.date
@@ -143,9 +148,6 @@ class Reservation extends Component {
             + '&seats=' + reserved_seats.toString()
             + '&username=' + localStorage.getItem('username'))
           .then(response => console.log(response));
-        const form = event.currentTarget;
-        console.log(form.elements.popcornL.value);
-
 
 
     };

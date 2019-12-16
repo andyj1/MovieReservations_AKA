@@ -132,26 +132,31 @@ public class ShowtimeStoreController implements ShowtimeStore{
     @Override
     public Showtime getShowtimeById(String id) {
         Showtime showtime = null;
-        FindIterable<Document> iterable = showtimeCollection.find(eq("_id", new ObjectId(id)));
-        for(Document doc : iterable){
-            String movie = doc.getString("movie_name");
-            String theater = doc.getString("theater_name");
-            String date = doc.getString("date");
-            String time = doc.getString("time");
-            String type = doc.getString("type");
-            List<Integer> seats = (List<Integer>)doc.get("seats");
+        try{
+            FindIterable<Document> iterable = showtimeCollection.find(eq("_id", new ObjectId(id)));
+            for(Document doc : iterable){
+                String movie = doc.getString("movie_name");
+                String theater = doc.getString("theater_name");
+                String date = doc.getString("date");
+                String time = doc.getString("time");
+                String type = doc.getString("type");
+                List<Integer> seats = (List<Integer>)doc.get("seats");
 
-            showtime = new ShowtimeBuilder()
-                    .showtime_id(id)
-                    .movie_id(movie)
-                    .theater_id(theater)
-                    .date(date)
-                    .time(time)
-                    .type(type)
-                    .seats(seats)
-                    .build();
-            break;
+                showtime = new ShowtimeBuilder()
+                        .showtime_id(id)
+                        .movie_id(movie)
+                        .theater_id(theater)
+                        .date(date)
+                        .time(time)
+                        .type(type)
+                        .seats(seats)
+                        .build();
+                break;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
         return showtime;
     }
 

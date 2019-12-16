@@ -58,6 +58,10 @@ public class SeatingStoreController implements SeatingStore{
                 }
             }
 
+            if(res_seats.size() == 0){
+                return null;
+            }
+
             seating = new SeatingBuilder()
                     .showtime_id(showtime_id)
                     .seat_num(res_seats)

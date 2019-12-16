@@ -90,9 +90,7 @@ public class Application {
 
         // if token is present in the header, use it to
         get("/login", "application/json", (req, res) -> {
-            res.type("application/json");
             String token = req.headers("token");
-
             final String username = req.queryParams("username");
             final String password = req.queryParams("password");
             if (!token.isEmpty()) {
@@ -102,13 +100,12 @@ public class Application {
                 token = us.generateToken(username, password);
             }
             return token;
-        }, json());
+        });
 
         get("/theaters", "application/json", (req, res) -> {
-            res.type("application/json");
             List<Theater> theaters = ts.getTheaters();
             return theaters;
-        }, json());
+        });
 
         get("/movies", "application/json", (req, res) -> {
             List<String> movies = ss.getPopMovies();
@@ -148,6 +145,9 @@ public class Application {
             List<Integer> seat = new ArrayList<>();
             for(int i = 0; i < val.length; i++){
                 seat.add(Integer.parseInt(val[i]));
+            }
+            if(seat.size() == 0){
+                return "No seats specified";
             }
             String id = ss.getShowtimeId(time, movie, theater, date);
             if(id != null){
@@ -232,6 +232,16 @@ public class Application {
                 return showtime;
             } else{
                 return "User is not an Admin";
+            }
+        });
+
+        get("/showtime_info", "application/json", (req, res) -> {
+            final String showtime_id = req.queryParams("showtime_id");
+            Showtime showtime = ss.getShowtimeById(showtime_id);
+            if(showtime == null){
+                return "Movie Info Not Available";
+            } else{
+                return showtime;
             }
         });
     }

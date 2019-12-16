@@ -29,7 +29,7 @@ class Signup extends Component {
       method: 'GET'
     }).then(response => {
         if(response.status === 200) {
-          localStorage.setItem('user', form.elements.validationCustomUsername.value);
+          this.props.history.push('/');
         }
       });
     this.setState({setValidated: true});

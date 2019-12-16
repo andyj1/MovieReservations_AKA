@@ -27,6 +27,7 @@ class Signin extends Component {
           } else {
             this.setState({setValidated: true});
             localStorage.setItem('user_id', data);
+            localStorage.setItem('username', form.elements.validationUsername.value);
             this.props.history.push('/Movies');
           }
         })
@@ -34,7 +35,7 @@ class Signin extends Component {
 
   componentDidMount() {
     if (loggedIn()) {
-      this.props.history.push('/Movies');
+      this.props.history.push('/Profile');
     }
   }
 
@@ -43,7 +44,7 @@ class Signin extends Component {
       <>
         <div style={{paddingTop: '3vh'}}/>
         <Card style={{width: '30vw', marginLeft: 'auto', marginRight: 'auto'}}>
-          <h2 style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '2vh'}}> Sign Up </h2>
+          <h2 style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '2vh'}}> Sign In</h2>
           <Form noValidate validated={this.state.validated} onSubmit={(e) => this.handleSubmit(e)} style={{
             width: '28vw',
             marginLeft: 'auto',

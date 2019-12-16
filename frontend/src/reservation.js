@@ -9,7 +9,6 @@ class Reservation extends Component {
             theater: '',
             date: '',
             time: '',
-            seatchosen: [],
             status: false,
             seats: [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 15, 17, 18, 20, 21, 25, 28, 30],
             seat: [],
@@ -17,7 +16,6 @@ class Reservation extends Component {
         };
     }
     createSeatIndex = () => {
-        console.log(this.state.seats);
         let seat = new Array(30).fill(0);
         console.log(seat);
         this.state.seats.map((seatid) => (
@@ -32,7 +30,7 @@ class Reservation extends Component {
             return null;
         } else if (prevState.seat1d.length === 0) {
             let seat = new Array(30).fill(0);
-            prevState.seats.map((seatid) => (
+            prevProps.location.state.seats.map((seatid) => (
               seatid < 31 ? seat[seatid - 1] = 1 : console.log('Invalid Index' + seatid)
             ));
             var arrange_seats = [];
@@ -70,7 +68,7 @@ class Reservation extends Component {
           temp[index] = 2;
       }
       var arrange_seats = [];
-      var seat = [...temp]
+      var seat = [...temp];
       while (seat.length) {
         arrange_seats.push(seat.splice(0, 5));
       }
@@ -78,7 +76,6 @@ class Reservation extends Component {
           seat1d: temp,
           seat: arrange_seats
       });
-      console.log(this.state.seat1d)
     };
 
     handleSeatReserve = (event) => (
@@ -116,7 +113,7 @@ class Reservation extends Component {
               </Row>
             ))}
             <Row>
-                <Button onClick={(e) => this.handleSeatReserve(e)}type="submit" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '5vh'}}>
+                <Button onClick={(e) => this.handleSeatReserve(e)} type="submit" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '5vh'}}>
                     <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
                         Continue
                     </div>
@@ -127,22 +124,72 @@ class Reservation extends Component {
       </>
     );
 
+    handleSubmit = (event) => {
+        event.preventDefault();
+        let reserved_seats = this.state.seat1d.reduce(function(a, e, i) {
+            if (e === 2)
+                a.push(i+1);
+            return a;
+        }, []);
+        console.log(this.state.theater);
+        console.log(this.state.date);
+        console.log(this.state.movie);
+        console.log(this.state.time);
+        console.log(reserved_seats.toString());
+        fetch('http://192.168.1.158:1010/seats?theater_name=' + this.state.theater
+            + '&date=' + this.state.date
+            + '&movie_name=' + this.state.movie
+            + '&time=' + this.state.time
+            + '&seats=' + reserved_seats.toString()
+            + '&username=' + localStorage.getItem('username'))
+          .then(response => console.log(response));
+        const form = event.currentTarget;
+        console.log(form.elements.popcornL.value);
+
+
+
+    };
 
 
     showFoods = () => (
         <>
-            <Form>
-                <Form.Group as={Row} controlId="popcorn">
+            <Form onSubmit={(e) => this.handleSubmit(e)}>
+                <Form.Group as={Row} controlId="popcornL">
                     <Form.Label column sm={2}>
-                        Popcorn
+                        Popcorn Large
                     </Form.Label>
                     <Col sm={10}>
                         <Form.Control type="number" placeholder="Enter Amount"/>
                     </Col>
                 </Form.Group>
+                <Form.Group as={Row} controlId="popcornS">
+                    <Form.Label column sm={2}>
+                        Popcorn Small
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="number" placeholder="Enter Amount"/>
+                    </Col>
+                </Form.Group>
+                <Form.Group as={Row} controlId="Soda">
+                    <Form.Label column sm={2}>
+                        Soda
+                    </Form.Label>
+                    <Col sm={10}>
+                        <Form.Control type="number" placeholder="Enter Amount"/>
+                    </Col>
+                </Form.Group>
+                <Row>
+                    <Button type="submit" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '2vh'}}>
+                        <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.5vh', paddingBottom: '0.5vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
+                            Reserve
+                        </div>
+                    </Button>
+                </Row>
             </Form>
+
         </>
     );
+
 
     render() {
 

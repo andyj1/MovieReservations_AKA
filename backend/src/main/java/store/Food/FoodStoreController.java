@@ -3,6 +3,7 @@ package store.Food;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.typesafe.config.Config;
@@ -12,6 +13,10 @@ import model.FoodBuilder;
 import org.bson.Document;
 import utils.tokenizer;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 public class FoodStoreController implements FoodStore {
@@ -23,6 +28,26 @@ public class FoodStoreController implements FoodStore {
 
     public FoodStoreController() {
         this.config = config;
+    }
+
+    @Override
+    public List<Food> getAllFood() {
+        List<Food> foodList = new ArrayList<>();
+        try{
+            FindIterable<Document> iterable = foodCollection.find();
+            for(Document doc : iterable){
+                String food_id = doc.getString("food_id");
+                String food_desc = doc.getString("food_desc");
+                Food food = new FoodBuilder()
+                        .food_id(food_id)
+                        .food_desc(food_desc)
+                        .build();
+                foodList.add(food);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return foodList;
     }
 
     @Override

@@ -15,6 +15,7 @@ import store.Theater.TheaterStore;
 import store.Theater.TheaterStoreController;
 import store.User.UserStore;
 import store.User.UserStoreController;
+import utils.tokenizer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class Application {
     private static FoodReservationStore frs = new FoodReservationStoreController();
     private static FoodStore fs = new FoodStoreController();
     private static MovieStore ms = new MovieStoreController();
+    private static tokenizer tk = new tokenizer();
 
     public static void main(String[] args) {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -63,6 +65,7 @@ public class Application {
         before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
         get("/signup", "application/json", (req, res) -> {
+            res.type("application/json");
             final String username = req.queryParams("username");
             final String password = req.queryParams("password");
             final String name = req.queryParams("name");
@@ -86,16 +89,15 @@ public class Application {
             us.addUser(user);
 
             return HttpStatus.OK_200; // directly deliver status code since not using handler for setting response status
-        });
+        }, json());
 
         // if token is present in the header, use it to
         get("/login", "application/json", (req, res) -> {
             res.type("application/json");
             String token = req.headers("token");
-
             final String username = req.queryParams("username");
             final String password = req.queryParams("password");
-            if (!token.isEmpty()) {
+            if (token != null && tk.verifyToken(token).equals(username)) {
                 return HttpStatus.OK_200;
             } else {
                 // generateToken generate a string token after authenticating username and password
@@ -111,33 +113,38 @@ public class Application {
         }, json());
 
         get("/movies", "application/json", (req, res) -> {
+            res.type("application/json");
             List<String> movies = ss.getPopMovies();
             return movies;
-        });
+        }, json());
 
         get("/all_showtimes", "application/json", (req, res) -> {
+            res.type("application/json");
             final String theater = req.queryParams("theater_name");
             final String date = req.queryParams("date");
             List<Showtime> showtimes = ss.getAllShowtimes(theater, date);
             return showtimes;
-        });
+        }, json());
 
         get("/movie_showtimes", "application/json", (req, res) -> {
+            res.type("application/json");
             final String movie = req.queryParams("movie_name");
             final String date = req.queryParams("date");
             List<Showtime> showtimes = ss.getShowtimesByMovie(movie, date);
             return showtimes;
-        });
+        }, json());
 
         get("/showtimes", "application/json", (req, res) -> {
+            res.type("application/json");
             final String theater = req.queryParams("theater_name");
             final String date = req.queryParams("date");
             final String movie = req.queryParams("movie_name");
             List<Showtime> showtimes = ss.getShowtimes(theater, date, movie);
             return showtimes;
-        });
+        }, json());
 
         get("/seats", "application/json", (req, res) -> {
+            res.type("application/json");
             final String theater = req.queryParams("theater_name");
             final String date = req.queryParams("date");
             final String movie = req.queryParams("movie_name");
@@ -149,6 +156,9 @@ public class Application {
             for(int i = 0; i < val.length; i++){
                 seat.add(Integer.parseInt(val[i]));
             }
+            if(seat.size() == 0){
+                return "No seats specified";
+            }
             String id = ss.getShowtimeId(time, movie, theater, date);
             if(id != null){
                 Seating seating = seatings.createSeating(id, seat, username);
@@ -156,21 +166,24 @@ public class Application {
             } else{
                 return "Invalid Showtime Selection";
             }
-        });
+        }, json());
 
         get("/get_seats", "application/json", (req, res) -> {
+            res.type("application/json");
             final String username = req.queryParams("username");
             List<Seating> seating = seatings.getSeating(username);
             return seating;
-        });
+        }, json());
 
         get("/get_food", "application/json", (req, res) -> {
+            res.type("application/json");
             final String username = req.queryParams("username");
             List<FoodReservation> foodReservations = frs.getFoodReservations(username);
             return foodReservations;
-        });
+        }, json());
 
         get("/movie_info", "application/json", (req, res) -> {
+            res.type("application/json");
             final String movie_name = req.queryParams("movie_name");
             Movie movie = ms.getMovieInfo(movie_name);
             if(movie == null){
@@ -178,9 +191,10 @@ public class Application {
             } else{
                 return movie;
             }
-        });
+        }, json());
 
         get("/food", "application/json", (req, res) -> {
+            res.type("application/json");
             final String theater = req.queryParams("theater_name");
             final String date = req.queryParams("date");
             final String movie = req.queryParams("movie_name");
@@ -195,15 +209,17 @@ public class Application {
             } else{
                 return "Invalid Showtime Selection";
             }
-        });
+        }, json());
 
         get("/user", "application/json", (req, res) -> {
+            res.type("application/json");
             final String username = req.queryParams("username");
             User user = us.getUserProfile(username);
             return user;
-        });
+        }, json());
 
         get("/add_food", "application/json", (req, res) -> {
+            res.type("application/json");
             final String username = req.queryParams("username");
             final String foodId = req.queryParams("food_id");
             final String foodDesc = req.queryParams("food_desc");
@@ -214,9 +230,10 @@ public class Application {
             } else{
                 return "User is not an Admin";
             }
-        });
+        }, json());
 
         get("/add_showtime", "application/json", (req, res) -> {
+            res.type("application/json");
             final String username = req.queryParams("username");
             final String movie_name = req.queryParams("movie_name");
             final String theater_name = req.queryParams("theater_name");
@@ -233,7 +250,18 @@ public class Application {
             } else{
                 return "User is not an Admin";
             }
-        });
+        }, json());
+
+        get("/showtime_info", "application/json", (req, res) -> {
+            res.type("application/json");
+            final String showtime_id = req.queryParams("showtime_id");
+            Showtime showtime = ss.getShowtimeById(showtime_id);
+            if(showtime == null){
+                return "Movie Info Not Available";
+            } else{
+                return showtime;
+            }
+        }, json());
     }
 
 }

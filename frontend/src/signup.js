@@ -15,8 +15,6 @@ class Signup extends Component {
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
-    } else {
-
     }
     event.preventDefault();
     fetch('http://192.168.1.158:1010/signup?username=' + form.elements.validationCustomUsername.value
@@ -108,7 +106,7 @@ class Signup extends Component {
               </Form.Group>
               <Form.Group as={Col} md="6" name="zip" controlId="validationZIP">
                 <Form.Label>Zip Code</Form.Label>
-                <Form.Control type="password" placeholder="ZIP Code" required/>
+                <Form.Control type="text" placeholder="ZIP Code" required/>
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid zip.
                 </Form.Control.Feedback>

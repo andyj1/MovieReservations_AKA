@@ -11,6 +11,8 @@ class Reservation extends Component {
             time: '',
             status: false,
             seats: [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 15, 17, 18, 20, 21, 25, 28, 30],
+            food: ['popcorn_1', 'popcorn_2', 'soda_1', 'soda_2'],
+            food_desc: ['Popcorn Small', 'Popcorn Large', 'Coca-Cola', 'Sprite'],
             seat: [],
             seat1d: []
         };
@@ -136,9 +138,20 @@ class Reservation extends Component {
         console.log(this.state.date);
         console.log(this.state.movie);
         console.log(this.state.time);
-        console.log(form.elements.popcornL.value);
-        console.log(form.elements.popcornS.value);
-        console.log(form.elements.soda.value);
+        //console.log(form.elements['popcornL'].value);
+        console.log(form.elements);
+        //console.log(form.elements.soda.value);
+        this.state.food.map((food, index) => {
+            console.log(form.elements[food].value);
+            fetch('http://192.168.1.158:1010/food?theater_name=' + this.state.theater
+                + '&date=' + this.state.date
+                + '&movie_name=' + this.state.movie
+                + '&time=' + this.state.time
+                + '&food=' + this.state.food[index]
+                + '&quantity=' + form.elements[food].value
+                + '&username=' + localStorage.getItem('username'))
+                .then(response => console.log(response));
+        });
 
         console.log(reserved_seats.toString());
         fetch('http://192.168.1.158:1010/seats?theater_name=' + this.state.theater
@@ -147,39 +160,27 @@ class Reservation extends Component {
             + '&time=' + this.state.time
             + '&seats=' + reserved_seats.toString()
             + '&username=' + localStorage.getItem('username'))
-          .then(response => console.log(response));
-
-
+          .then(response => {
+              if (response.status === 200) {
+                  this.props.history.replace('/')
+              }
+          });
     };
 
 
     showFoods = () => (
         <>
             <Form onSubmit={(e) => this.handleSubmit(e)}>
-                <Form.Group as={Row} controlId="popcornL">
-                    <Form.Label column sm={2}>
-                        Popcorn Large
-                    </Form.Label>
-                    <Col sm={10}>
-                        <Form.Control type="number" placeholder="Enter Amount"/>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId="popcornS">
-                    <Form.Label column sm={2}>
-                        Popcorn Small
-                    </Form.Label>
-                    <Col sm={10}>
-                        <Form.Control type="number" placeholder="Enter Amount"/>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId="Soda">
-                    <Form.Label column sm={2}>
-                        Soda
-                    </Form.Label>
-                    <Col sm={10}>
-                        <Form.Control type="number" placeholder="Enter Amount"/>
-                    </Col>
-                </Form.Group>
+                {this.state.food.map((food, index) => (
+                    <Form.Group as={Row} controlId={food}>
+                        <Form.Label column sm={2}>
+                            {this.state.food_desc[index]}
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Control type="number" placeholder="Enter Amount"/>
+                        </Col>
+                    </Form.Group>
+                ))}
                 <Row>
                     <Button type="submit" style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '2vh'}}>
                         <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.5vh', paddingBottom: '0.5vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>

@@ -73,8 +73,9 @@ class Movie extends Component {
     getMovieTimes = (movie_name, date) => {
         fetch('http://192.168.1.158:1010/movie_showtimes?movie_name=' + movie_name
           + '&date=' + date)
-          .then(response => response.text())
+          .then(response => response.json())
           .then(data => {
+              /*
               var temp = data.substr(1, data.length-3).split('}, ');
               var new_arr = temp.map((str, index) => {
                   var movie_json = str.replace("Showtime{showtime_id=, ", "");
@@ -84,10 +85,12 @@ class Movie extends Component {
                   movie_json = '{' + movie_json + '}';
                   return JSON.parse(movie_json);
               });
+              */
               var movie_theaters = [];
               var movie_times = {};
               var movie_seats = {};
-              new_arr.forEach((showtime, index) => {
+              console.log(data)
+              data.forEach((showtime, index) => {
                   if (movie_theaters.includes(showtime['theater_id'])) {
                       movie_times[showtime['theater_id']].push(showtime['time']);
                       movie_seats[showtime['theater_id']].push(showtime['seats']);
@@ -126,7 +129,7 @@ class Movie extends Component {
         <>
             <ButtonToolbar>
                     {this.state.movie_time[theater].map((time, index) => (
-                        <Button onClick={(e) => this.showReservation(e, theater, time)}variant="primary" key={index+100} style={{marginLeft: '.1vw', marginRight: '.1vw'}}>
+                        <Button onClick={(e) => this.showReservation(e, theater, time)} variant="primary" key={index+100} style={{marginLeft: '.1vw', marginRight: '.1vw'}}>
                             {time}
                         </Button>
                     ))}

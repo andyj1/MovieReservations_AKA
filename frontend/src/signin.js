@@ -18,7 +18,8 @@ class Signin extends Component {
       }
       event.preventDefault();
       fetch('http://192.168.1.158:1010/login?username=' + form.elements.validationUsername.value
-        + '&password=' + form.elements.validationPassword.value, {
+        + '&password=' + form.elements.validationPassword.value
+          + '&token=', {
         method: 'GET'
       }).then(response => (response.json()))
         .then(data => {
@@ -38,6 +39,10 @@ class Signin extends Component {
       this.props.history.push('/Profile');
     }
   }
+
+  redirectSignup = (e) => (
+      this.props.history.push('/signup')
+  )
 
   render() {
     return (
@@ -80,7 +85,12 @@ class Signin extends Component {
                 <Form.Control.Feedback></Form.Control.Feedback>
               </Form.Group>
             </Form.Row>
-            <Button type="submit">Sign In</Button>
+            <Form.Row>
+              <Col md="4"/>
+              <Button as={Col} md="2" type="submit">Sign In</Button>
+              <Col md="14"/>
+              <Button onClick={(e) => this.redirectSignup(e)} as={Col} md="2" >Sign Up</Button>
+            </Form.Row>
           </Form>
         </Card>
       </>

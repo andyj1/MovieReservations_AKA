@@ -16,7 +16,7 @@ class Movies extends Component {
   componentDidMount() {
     fetch('http://192.168.1.158:1010/movies')
       .then(response => response.json())
-      .then(data => this.setState({movies: data['movies']}));
+      .then(data => this.setState({movies: data}));
   }
 
   showRecentMovies = () => (

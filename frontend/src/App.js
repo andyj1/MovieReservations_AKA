@@ -13,6 +13,7 @@ import Theaters from './theaters'
 import Theater from './theater'
 import Reservation from './reservation'
 import Profile from './Profile'
+import UserReservations from './userReservations'
 
 class App extends Component {
   render() {
@@ -36,6 +37,7 @@ class App extends Component {
               <Route exact path="/Reservation" component={Reservation} />
               <Route exact path="/Signup" component={Signup} />
               <Route exact path="/Profile" component={Profile} />
+              <Route exact path="/user/reservations" component={UserReservations} />
             </Switch>
           </Router>
         </>

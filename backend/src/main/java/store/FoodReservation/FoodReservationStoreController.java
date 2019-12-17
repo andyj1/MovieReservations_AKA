@@ -83,12 +83,12 @@ public class FoodReservationStoreController implements FoodReservationStore {
                 String food_id = doc.getString("food_id");
                 Integer count = (Integer) doc.get("count");
                 String id = doc.getObjectId("_id").toHexString();
-
+                String desc = fs.getFoodDesc(food_id);
                 FoodReservation foodReservation = new FoodReservationBuilder()
                         .showtime_id(showtime_id)
                         .food_res_id(id)
                         .count(count)
-                        .food_id(food_id)
+                        .food_id(desc)
                         .user_id(username)
                         .build();
 

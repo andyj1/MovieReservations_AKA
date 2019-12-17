@@ -262,6 +262,12 @@ public class Application {
                 return showtime;
             }
         }, json());
+
+        get("/food_info", "application/json", (req, res) -> {
+            res.type("application/json");
+            List<Food> food = fs.getAllFood();
+            return food;
+        }, json());
     }
 
 }

@@ -15,6 +15,7 @@ import store.Theater.TheaterStore;
 import store.Theater.TheaterStoreController;
 import store.User.UserStore;
 import store.User.UserStoreController;
+import utils.tokenizer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class Application {
     private static FoodReservationStore frs = new FoodReservationStoreController();
     private static FoodStore fs = new FoodStoreController();
     private static MovieStore ms = new MovieStoreController();
+    private static tokenizer tk = new tokenizer();
 
     public static void main(String[] args) {
         exception(Exception.class, (e, req, res) -> e.printStackTrace());
@@ -95,7 +97,7 @@ public class Application {
             String token = req.headers("token");
             final String username = req.queryParams("username");
             final String password = req.queryParams("password");
-            if (!token.isEmpty()) {
+            if (token != null && tk.verifyToken(token).equals(username)) {
                 return HttpStatus.OK_200;
             } else {
                 // generateToken generate a string token after authenticating username and password

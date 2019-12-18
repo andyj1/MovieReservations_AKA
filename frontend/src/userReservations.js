@@ -21,7 +21,6 @@ class UserReservations extends Component {
     };
 
     static getDerivedStateFromProps(prevProps, prevState) {
-        console.log(prevProps.location.state);
         return (prevProps.location.state)
     }
 

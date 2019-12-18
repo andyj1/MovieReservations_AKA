@@ -16,7 +16,7 @@ class Movie extends Component {
             movie_seats : {
                 "AMC West": [[1,2,3], [1,2,3], [1,2,3]]
             },
-            dates: ["2019-12-10", "2019-12-11", "2019-12-12"],
+            dates: ["2019-12-10", "2019-12-11", "2019-12-12", "2019-12-13", "2019-12-14", "2019-12-15", "2019-12-16", "2019-12-17", "2019-12-18"],
             date: "2019-12-10",
             rating: 'No Rating Provided',
             genre: [""],
@@ -39,21 +39,6 @@ class Movie extends Component {
           .then(data => {
               if (data !== 'Movie Info Not Available') {
                   var movie_json = data;
-                  /*
-                  var movie_json = data.substr(0, data.length - 1).replace("Movie{movie_id=, ", "");
-                  movie_json = (',' + movie_json).replace(/,([a-zA-Z0-9-:_ ().@']+)=/g, "|$1=");
-                  movie_json = ('| ' + movie_json.substr(1, movie_json.length - 1)).replace(/(\| )([a-zA-Z0-9-_']+)=([a-zA-Z0-9-: '.()%,]+)/g, "\"$2\":\"$3\", ");
-                  movie_json = movie_json.replace(/(\| )([a-zA-Z0-9-_' ]+)=([a-zA-Z0-9-: '.()%,\[\]]+)/g, "\"$2\":$3, ");
-                  movie_json = movie_json.replace(/(genre":)\[([a-zA-Z0-9, ]+)(]. ")(director":\[)/g, "$1[\"$2\"$3$4");
-                  movie_json = movie_json.replace(/(director":\[)([a-zA-Z0-9, ]+)(]. ")/g, "$1\"$2\"$3");
-                  movie_json = movie_json.replace(/(writer":\[)([a-zA-Z0-9, ]+)/g, "$1\"$2\"");
-
-                  //movie_json = movie_json.replace(/(genre":)\[([a-zA-Z0-9, ]+)(]. ")(director":\[)([a-zA-Z0-9, ]+)(]. ")(writer":\[)([a-zA-Z0-9, ]+)/g, "$1[\"$2\"$3$4\"$5\"$6$7\"$8\"");
-                  movie_json = '{' + movie_json.substr(0, movie_json.length - 2) + '}';
-                  console.log(movie_json);
-
-                  movie_json = JSON.parse(movie_json);
-                   */
                   this.setState({
                       description: movie_json['description'],
                       genre: movie_json['genre'],
@@ -89,7 +74,6 @@ class Movie extends Component {
               var movie_theaters = [];
               var movie_times = {};
               var movie_seats = {};
-              console.log(data)
               data.forEach((showtime, index) => {
                   if (movie_theaters.includes(showtime['theater_id'])) {
                       movie_times[showtime['theater_id']].push(showtime['time']);

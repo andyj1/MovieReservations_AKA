@@ -23,7 +23,8 @@ class Signin extends Component {
         method: 'GET'
       }).then(response => (response.json()))
         .then(data => {
-          if (data === 'invalid login') {
+          console.log(data)
+          if (data === 'login failed.') {
             this.setState({setValidated: false})
           } else {
             this.setState({setValidated: true});
@@ -87,9 +88,9 @@ class Signin extends Component {
             </Form.Row>
             <Form.Row>
               <Col md="4"/>
-              <Button as={Col} md="2" type="submit">Sign In</Button>
+                <Button type="submit">Sign In</Button>
               <Col md="14"/>
-              <Button onClick={(e) => this.redirectSignup(e)} as={Col} md="2" >Sign Up</Button>
+               <Button onClick={(e) => this.redirectSignup(e)}>Sign Up</Button>
             </Form.Row>
           </Form>
         </Card>

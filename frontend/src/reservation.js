@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Jumbotron, Container, Row, Col, Button, Form} from "react-bootstrap";
 
+const seat_val = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
 class Reservation extends Component {
     constructor(props) {
         super(props);
@@ -19,18 +21,37 @@ class Reservation extends Component {
     }
     createSeatIndex = () => {
         let seat = new Array(30).fill(0);
-        console.log(seat);
         this.state.seats.map((seatid) => (
           seatid < 31 ? seat[seatid - 1] = 1 : console.log('Invalid Index' + seatid)
         ));
         return seat;
     };
 
+
+    componentDidMount() {
+        var food_desc = [];
+        var food = [];
+        fetch('http://192.168.1.158:1010/food_info')
+            .then(response => response.json())
+            .then(data => {
+                data.map((food_item) => {
+                    food_desc.push(food_item['food_id']);
+                    food.push(food_item['food_desc'])
+                })
+                this.setState({
+                    food:food_desc,
+                    food_desc: food
+                })
+            });
+
+    }
+
     static getDerivedStateFromProps(prevProps, prevState) {
         if (prevProps.location.state == null) {
-            prevProps.history.replace('/Movies')
+            prevProps.history.replace('/Movies');
             return null;
         } else if (prevState.seat1d.length === 0) {
+
             let seat = new Array(30).fill(0);
             prevProps.location.state.seats.map((seatid) => (
               seatid < 31 ? seat[seatid - 1] = 1 : console.log('Invalid Index' + seatid)
@@ -95,18 +116,18 @@ class Reservation extends Component {
                         {seatState === 1 ?
                           <Button onClick={(e) => this.handleSeatClick(e, index * 5 + index2)} variant='primary' block>
                               <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
-                                {index * 5 + index2}
+                                {seat_val[index] + (index2 + 1)}
                               </div>
                           </Button>
                           : seatState === 2 ?
                             <Button onClick={(e) => this.handleSeatClick(e, index * 5 + index2)} variant="outline-primary" block>
                                 <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
-                                    {index * 5 + index2}
+                                    {seat_val[index] + (index2 + 1)}
                                 </div>
                             </Button>
                             : <Button variant='primary' disabled  block>
                               <div style={{paddingLeft: '0', paddingRight: '0' ,paddingTop: '0.95vh', paddingBottom: '0.95vh', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto'}}>
-                                  {index * 5 + index2}
+                                  {seat_val[index] + (index2 + 1)}
                               </div>
                           </Button>}
                         </div>
@@ -143,14 +164,16 @@ class Reservation extends Component {
         //console.log(form.elements.soda.value);
         this.state.food.map((food, index) => {
             console.log(form.elements[food].value);
-            fetch('http://192.168.1.158:1010/food?theater_name=' + this.state.theater
-                + '&date=' + this.state.date
-                + '&movie_name=' + this.state.movie
-                + '&time=' + this.state.time
-                + '&food=' + this.state.food[index]
-                + '&quantity=' + form.elements[food].value
-                + '&username=' + localStorage.getItem('username'))
-                .then(response => console.log(response));
+            if (form.elements[food].value != 0) {
+                fetch('http://192.168.1.158:1010/food?theater_name=' + this.state.theater
+                    + '&date=' + this.state.date
+                    + '&movie_name=' + this.state.movie
+                    + '&time=' + this.state.time
+                    + '&food=' + this.state.food[index]
+                    + '&quantity=' + form.elements[food].value
+                    + '&username=' + localStorage.getItem('username'))
+                    .then(response => console.log(response));
+            }
         });
 
         console.log(reserved_seats.toString());

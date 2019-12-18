@@ -23,6 +23,7 @@ class App extends Component {
             <Navbar.Brand href="/">AKA</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/Profile">Profile</Nav.Link>
               <Nav.Link href="/Movies">Movies</Nav.Link>
               <Nav.Link href="/Theaters">Theaters</Nav.Link>
             </Nav>

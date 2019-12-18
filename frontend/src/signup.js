@@ -22,7 +22,7 @@ class Signup extends Component {
       + '&name=' + form.elements.validationName.value
       + '&email=' + form.elements.validationEmail.value
       + '&genre=' + form.elements.validationGenre.value
-      + '&zip_code=10009' + form.elements.validationZIP.value
+      + '&zip_code=' + form.elements.validationZIP.value
       + '&admin=' + form.elements.adminStatus.checked, {
       method: 'GET'
     }).then(response => {
@@ -99,14 +99,14 @@ class Signup extends Component {
             <Form.Row>
               <Form.Group as={Col} md="6" name="genre" controlId="validationGenre">
                 <Form.Label>Favorite Genre</Form.Label>
-                <Form.Control type="text" placeholder="Your genre" required/>
+                <Form.Control type="text" placeholder="Your genre"/>
                 <Form.Control.Feedback type="invalid">
                   Please enter a genre
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group as={Col} md="6" name="zip" controlId="validationZIP">
                 <Form.Label>Zip Code</Form.Label>
-                <Form.Control type="text" placeholder="ZIP Code" required/>
+                <Form.Control type="text" placeholder="ZIP Code"/>
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid zip.
                 </Form.Control.Feedback>

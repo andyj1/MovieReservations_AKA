@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Accordion, Button, ButtonToolbar, Card, Carousel, Jumbotron} from "react-bootstrap";
+import {Accordion, Button, ButtonToolbar, Card, Carousel, Dropdown, DropdownButton, Jumbotron} from "react-bootstrap";
 import loggedIn from "./loggedIn";
+import key from '../secrets/key'
 
 
 class Theater extends Component {
@@ -12,8 +13,12 @@ class Theater extends Component {
       times: {
         'Movie 1': ['1:00 pm', '2:00 pm']
       },
+        dates: ["2019-12-10", "2019-12-11", "2019-12-12", "2019-12-13", "2019-12-14", "2019-12-15", "2019-12-16", "2019-12-17", "2019-12-18"],
       seats: {
         'Movie 1': [[1,2,3], [1,2,3]]
+      },
+      img_link: {
+          'test': 'test'
       },
       date: '2019-12-11',
     }
@@ -30,18 +35,6 @@ class Theater extends Component {
       + '&date=' + date)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        /*
-        var temp = data.substr(1, data.length-3).split('}, ');
-        var new_arr = temp.map((str, index) => {
-          var movie_json = str.replace("Showtime{showtime_id=, ", "");
-          movie_json = movie_json.replace(/=/g, ':');
-          movie_json = movie_json.replace(/([a-zA-Z0-9-_]+):([a-zA-Z0-9-: ().'&]+)/g, "\"$1\":\"$2\"");
-          movie_json = movie_json.replace("seats", "\"seats\"");
-          movie_json = '{' + movie_json + '}';
-          return JSON.parse(movie_json);
-        });
-         */
         var movies = [];
         var movie_times = [];
         var seats = [];
@@ -64,13 +57,23 @@ class Theater extends Component {
             type[showtime['movie_id']] = type_arr;
           }
         });
+          var img_links = {};
+          var movies_list = [...movies];
+          movies_list.map((movie, index) => {
+              fetch('https://www.googleapis.com/customsearch/v1?cx=010013580991372353059:ljv0pdmangk&searchType=image&num=1&key=' + key + '&q=' + encodeURI(movie + ' movie'), {
+                  method: 'GET',
+              }).then(response => response.json())
+                  .then(data => {
+                      img_links[movies[index]] = data.items[0]['link'];
+                      this.setState({img_link: img_links});
+                  });
+          });
         this.setState({
           movies: movies,
           times: movie_times,
           seats: seats,
           showing_type: type,
         });
-        console.log(type);
       });
   };
   showRecentMovies = () => (
@@ -78,6 +81,14 @@ class Theater extends Component {
       {this.state.movies.map((movie, index) => (
         <Carousel.Item key={index}>
           <div style={{backgroundColor: '#007bff', height: '40vh', width: '50vw'}}>
+              <img
+                  src={this.state.img_link[movie]}
+                  alt="Third slide"
+                  style={{
+                      height: '40vh',
+                      width: '50vw',
+                  }}
+              />
             <Carousel.Caption>
               <h3 onClick={(e) => {this.redirectMovie(e, movie)}}>{movie}</h3>
               <p>{}</p>
@@ -117,6 +128,12 @@ class Theater extends Component {
     </Accordion>
   );
 
+    changeDate = (event, date) => {
+        // Add query to change state of movie times
+        this.setState({date: date})
+        this.getMovieShowtimes(date, this.state.theater);
+    };
+
   showMovieTimes = (times, movie) => (
     <>
       <ButtonToolbar>
@@ -129,16 +146,39 @@ class Theater extends Component {
     </>
   );
 
+  redirectMovie = (event, movie) => (
+      this.props.history.push('/movie/' + movie)
+  )
+
 
   render() {
     return (
       <>
         <Jumbotron>
           <h1>{this.state.theater}</h1>
+            <DropdownButton id="dropdown-basic-button" title={this.state.date} style={{paddingTop: '1vh', paddingBottom: '2vh'}}>
+                {this.state.dates.map((date, index) => (
+                    <Dropdown.Item onClick={(e) => this.changeDate(e, date)} key={index+200}>{date}</Dropdown.Item>
+                ))}
+            </DropdownButton>
         </Jumbotron>
+          {Object.keys(this.state.img_link).length === this.state.movies.length ?
         <div style={{paddingTop: '1vh', width: '50vw', marginLeft: 'auto', marginRight: 'auto'}}>
           {this.showRecentMovies()}
         </div>
+              :
+              <div style={{paddingTop: '1vh', width: '50vw', marginLeft: 'auto', marginRight: 'auto'}}>
+                  <Carousel bg="dark" variant="dark">
+                      <Carousel.Item >
+                          <div style={{backgroundColor: '#007bff', height: '40vh', width: '50vw'}}>
+                              <Carousel.Caption>
+                                  <h3>{'Loading...'}</h3>
+                                  <p>{}</p>
+                              </Carousel.Caption>
+                          </div>
+                      </Carousel.Item>
+                  </Carousel>
+              </div>}
         <div>
           {this.showMovieShowtimes()}
         </div>

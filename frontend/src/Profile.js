@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Tabs, Tab, Jumbotron, Card, Form, Col, InputGroup, Button, Accordion} from "react-bootstrap";
 import loggedIn from "./loggedIn";
 
+const seat_val = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 class Profile extends Component {
   constructor(props) {
@@ -21,8 +22,9 @@ class Profile extends Component {
     if (loggedIn()) {
       this.getReservations();
       fetch("http://192.168.1.158:1010/user?username=" + localStorage.getItem('username'))
-        .then(response => {if (response.status === 200) return response.json()})
+        .then(response => response.json())
         .then(data => {
+            console.log(data);
           var user_json = data;
           if (user_json['admin']) {
             fetch("http://192.168.1.158:1010/theaters")
@@ -61,6 +63,7 @@ class Profile extends Component {
   handleShowtimeSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+      console.log(form);
     fetch('http://192.168.1.158:1010/add_showtime?username=' + localStorage.getItem('username')
           + '&movie_name=' + form.elements.movie.value
           + '&theater_name=' + form.elements.theater_name.value
@@ -77,10 +80,13 @@ class Profile extends Component {
   handleFoodSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+    console.log(form.elements.Foodid.value);
+    console.log(form.elements.Fooddesc.value)
     fetch('http://192.168.1.158:1010/add_food?username=' + localStorage.getItem('username')
         + '&food_id=' + form.elements.Foodid.value
-        + '&theater_name=' + form.elements.Fooddesc.value)
+        + '&food_desc=' + form.elements.Fooddesc.value)
         .then(response => {
+            console.log(response)
           if (response.status === 200) {
             this.props.history.push('/');
           }
@@ -98,7 +104,13 @@ class Profile extends Component {
         var movie_type = [];
         var movie_theater = [];
         data.map((reservation, index) => {
-          seats.push(reservation['seat_num']);
+          var temp = [...reservation['seat_num']];
+          for (var i = 0; i < temp.length; i++) {
+            var letter =  seat_val[((temp[i]) / 5) | 0];
+            var number = ((temp[i] - 1) % 5) + 1;
+            temp[i] = letter + number.toString();
+          }
+          seats.push(temp);
           fetch("http://192.168.1.158:1010/showtime_info?showtime_id=" + reservation['showtime_id'])
               .then(response => response.json())
               .then(data => {
@@ -110,6 +122,7 @@ class Profile extends Component {
               })
 
         });
+
         this.setState({
           seats: seats,
           movies: movie_name,
@@ -152,7 +165,6 @@ class Profile extends Component {
           ftheater: movie_theater,
         };
         this.setState(food_res);
-        console.log(this.state)
       })
   };
 
@@ -173,6 +185,11 @@ class Profile extends Component {
     });
   };
 
+  handleLogout = (event) => {
+      localStorage.removeItem('username');
+      this.props.history.push('/')
+  };
+
 
   render() {
     return (
@@ -190,6 +207,10 @@ class Profile extends Component {
                     <Button onClick={this.handleReservationsClick}>
                       Reservations
                     </Button>}
+                    <p/>
+                  <Button onClick={this.handleLogout}>
+                      Logout
+                  </Button>
               </Card>
             </Tab>
             {this.state.admin ?
@@ -256,7 +277,7 @@ class Profile extends Component {
             {this.state.admin ?
               <Tab eventKey="Food" title="Add Food">
                 <Card style={{paddingTop: '2vh', paddingBottom: '2vh', paddingRight: '2vw', paddingLeft: '1vw'}}>
-                  <Form noValidate validated={this.state.validated} onSubmit={(e) => this.handleFoodSubmit(e)} style={{
+                  <Form onSubmit={(e) => this.handleFoodSubmit(e)} style={{
                     width: '28vw',
                     paddingLeft: '1vw',
                     paddingTop: '0vh',
@@ -270,6 +291,8 @@ class Profile extends Component {
                             type="text"
                             placeholder="Enter the Food ID"
                         />
+                          <Form.Control.Feedback type="invalid">
+                          </Form.Control.Feedback>
                       </Form.Group>
                       <Form.Group as={Col} md="8" name="desc" controlId="Fooddesc">
                         <Form.Label>Food Description</Form.Label>
@@ -278,11 +301,15 @@ class Profile extends Component {
                             type="text"
                             placeholder="Enter the Food Description"
                         />
+                          <Form.Control.Feedback type="invalid">
+                          </Form.Control.Feedback>
                       </Form.Group>
                     </Form.Row>
-                    <Button type="submit">
-                      Add
-                    </Button>
+                      <Form.Row>
+                        <Button type="submit">
+                          Add
+                        </Button>
+                      </Form.Row>
                   </Form>
                 </Card>
               </Tab>

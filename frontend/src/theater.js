@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Accordion, Button, ButtonToolbar, Card, Carousel, Dropdown, DropdownButton, Jumbotron} from "react-bootstrap";
 import loggedIn from "./loggedIn";
-import key from '../secrets/key'
+import key from './secrets/key'
 
 
 class Theater extends Component {

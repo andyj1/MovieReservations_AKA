@@ -18,15 +18,18 @@ class Signin extends Component {
       }
       event.preventDefault();
       fetch('http://192.168.1.158:1010/login?username=' + form.elements.validationUsername.value
-        + '&password=' + form.elements.validationPassword.value, {
+        + '&password=' + form.elements.validationPassword.value
+          + '&token=', {
         method: 'GET'
       }).then(response => (response.json()))
         .then(data => {
-          if (data === 'invalid login') {
+          console.log(data)
+          if (data === 'login failed.') {
             this.setState({setValidated: false})
           } else {
             this.setState({setValidated: true});
             localStorage.setItem('user_id', data);
+            localStorage.setItem('username', form.elements.validationUsername.value);
             this.props.history.push('/Movies');
           }
         })
@@ -34,16 +37,20 @@ class Signin extends Component {
 
   componentDidMount() {
     if (loggedIn()) {
-      this.props.history.push('/Movies');
+      this.props.history.push('/Profile');
     }
   }
+
+  redirectSignup = (e) => (
+      this.props.history.push('/signup')
+  )
 
   render() {
     return (
       <>
         <div style={{paddingTop: '3vh'}}/>
         <Card style={{width: '30vw', marginLeft: 'auto', marginRight: 'auto'}}>
-          <h2 style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '2vh'}}> Sign Up </h2>
+          <h2 style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '2vh'}}> Sign In</h2>
           <Form noValidate validated={this.state.validated} onSubmit={(e) => this.handleSubmit(e)} style={{
             width: '28vw',
             marginLeft: 'auto',
@@ -79,7 +86,12 @@ class Signin extends Component {
                 <Form.Control.Feedback></Form.Control.Feedback>
               </Form.Group>
             </Form.Row>
-            <Button type="submit">Sign In</Button>
+            <Form.Row>
+              <Col md="4"/>
+                <Button type="submit">Sign In</Button>
+              <Col md="14"/>
+               <Button onClick={(e) => this.redirectSignup(e)}>Sign Up</Button>
+            </Form.Row>
           </Form>
         </Card>
       </>

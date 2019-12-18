@@ -12,6 +12,8 @@ import Movie from './movie'
 import Theaters from './theaters'
 import Theater from './theater'
 import Reservation from './reservation'
+import Profile from './Profile'
+import UserReservations from './userReservations'
 
 class App extends Component {
   render() {
@@ -21,13 +23,10 @@ class App extends Component {
             <Navbar.Brand href="/">AKA</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/Profile">Profile</Nav.Link>
               <Nav.Link href="/Movies">Movies</Nav.Link>
               <Nav.Link href="/Theaters">Theaters</Nav.Link>
             </Nav>
-            <Form inline>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-              <Button variant="outline-light">Search</Button>
-            </Form>
           </Navbar>
           <Router>
             <Switch>
@@ -38,6 +37,8 @@ class App extends Component {
               <Route exact path="/Theater/:theater" component={Theater}/>
               <Route exact path="/Reservation" component={Reservation} />
               <Route exact path="/Signup" component={Signup} />
+              <Route exact path="/Profile" component={Profile} />
+              <Route exact path="/user/reservations" component={UserReservations} />
             </Switch>
           </Router>
         </>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Carousel, Spinner} from "react-bootstrap";
-import key from '../secrets/key'
+import key from './secrets/key'
 
 
 class Movies extends Component {
